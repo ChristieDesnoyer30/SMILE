@@ -28,14 +28,12 @@ public class LocationController {
         String blockCode = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies()
                 .getCensusBlocks().get(0).getGeoID();
         TopCrimeData topCrimeData = crimeServices.getCrimeData(blockCode);
-        CrimeData crimeData = topCrimeData.get(0);
-
 
         ModelAndView mv = new ModelAndView("home");
         mv.addObject("coordinatesX", coordinates.getX());
         mv.addObject("coordinatesY", coordinates.getY());
         mv.addObject("geo", blockCode);
-        mv.addObject("crimeAddress", crimeData.getAddress());
+        mv.addObject("topcrime", topCrimeData);
 
         return mv;
     }
