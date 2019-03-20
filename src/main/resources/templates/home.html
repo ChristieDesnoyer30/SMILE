@@ -11,6 +11,13 @@
 <p th:text="${coordinatesX}"></p>
 <p th:text="${coordinatesY}"></p>
 <p th:text="${geo}"></p>
+<div th:each= "crime: ${topcrime}">
+    <p th:text = "${crime.address}"></p>
+    <p th:text = "${crime.chargeDescription}"></p>
+    <p th:text = "${crime.formattedDate()}"></p>
+
+
+</div>
 
 
 </body>

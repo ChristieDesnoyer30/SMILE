@@ -3,6 +3,10 @@ package com.detroitlabs.smile.Model.CrimeDataModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CrimeData {
 
@@ -53,6 +57,17 @@ public class CrimeData {
 
     public void setNeighborhood(String neighborhood) {
         this.neighborhood = neighborhood;
+    }
+
+    public String removedTfromDateAndTime(){
+        return incidentTimeStamp.replace("T", " ");
+    }
+
+    public Date formattedDate() throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy HH:mm:ss");
+        Date date = simpleDateFormat.parse(removedTfromDateAndTime());
+        return date;
+
     }
 }
 
