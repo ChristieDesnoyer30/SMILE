@@ -2,12 +2,8 @@ package com.detroitlabs.smile.Model.CrimeDataModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -18,6 +14,7 @@ public class CrimeData {
     private String offenseDescription;
     private String incidentTimeStamp;
     private String neighborhood;
+    private String offenseCategory;
 
     public String getAddress() {
         return address;
@@ -60,6 +57,16 @@ public class CrimeData {
 
     public void setNeighborhood(String neighborhood) {
         this.neighborhood = neighborhood;
+    }
+
+    @JsonProperty("offense_category")
+    public String getOffenseCategory() {
+        return offenseCategory;
+    }
+
+    @JsonProperty("offense_category")
+    public void setOffenseCategory(String offenseCategory) {
+        this.offenseCategory = offenseCategory;
     }
 
     public String removedTFromDateAndTime(){

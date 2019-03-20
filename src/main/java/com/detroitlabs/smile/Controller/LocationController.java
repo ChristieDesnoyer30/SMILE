@@ -31,15 +31,10 @@ public class LocationController {
     @RequestMapping("getAddress")
     public ModelAndView showHomePage(@RequestParam("address") String userInputAddress) {
         TopLocationInfo topLocationInfo = locationServices.getLocationInfo(userInputAddress);
-        Coordinates coordinates = topLocationInfo.getResult().getAddressMatches().get(0).getCoordinates();
-        String blockCode = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies()
-                .getCensusBlocks().get(0).getGeoID();
+        String blockCode = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies().getCensusBlocks().get(0).getGeoID();
         TopCrimeData topCrimeData = crimeServices.getCrimeData(blockCode);
 
-        ModelAndView mv = new ModelAndView("home");
-        mv.addObject("coordinatesX", coordinates.getX());
-        mv.addObject("coordinatesY", coordinates.getY());
-        mv.addObject("geo", blockCode);
+        ModelAndView mv = new ModelAndView("practice-areas");
         mv.addObject("topcrime", topCrimeData);
 
         return mv;
