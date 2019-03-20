@@ -79,7 +79,6 @@ public class CrimeData {
         Date date = simpleDateFormat.parse(removedTFromDateAndTime());
         String[] date1 = date.toString().split(" ");
 
-        System.out.println(date1.length);
         return date1[0] +" "+ date1[1] +" " +date1[2] + " " + date1[3]+ " " + date1[4];
 
     }
