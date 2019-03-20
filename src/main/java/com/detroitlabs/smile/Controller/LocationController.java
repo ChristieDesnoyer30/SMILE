@@ -16,10 +16,10 @@ public class LocationController {
     LocationServices locationServices;
 
     @RequestMapping("/")
-    public ModelAndView showHomePage(){
+    public ModelAndView showHomePage() {
         TopLocationInfo topLocationInfo = locationServices.getLocationInfo("19 Clifford St Detroit Mi");
         Coordinates coordinates = topLocationInfo.getResult().getAddressMatches().get(0).getCoordinates();
-       String geo = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies()
+        String geo = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies()
                 .getCensusBlocks().get(0).getGeoID();
 
         ModelAndView mv = new ModelAndView("home");
@@ -27,11 +27,11 @@ public class LocationController {
         mv.addObject("coordinatesY", coordinates.getY());
         mv.addObject("geo", geo);
 
-       return mv;
+        return mv;
     }
 
     @RequestMapping("/test")
-    public String showPage(){
+    public String showPage() {
         return "index";
     }
 
