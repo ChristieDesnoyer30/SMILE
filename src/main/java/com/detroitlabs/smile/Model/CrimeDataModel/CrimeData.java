@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -59,15 +62,20 @@ public class CrimeData {
         this.neighborhood = neighborhood;
     }
 
-    public String removedTfromDateAndTime(){
+    public String removedTFromDateAndTime(){
         return incidentTimeStamp.replace("T", " ");
     }
 
-    public Date formattedDate() throws ParseException {
+
+    public String formattedDate() throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy HH:mm:ss");
-        Date date = simpleDateFormat.parse(removedTfromDateAndTime());
-        return date;
+        Date date = simpleDateFormat.parse(removedTFromDateAndTime());
+        String[] date1 = date.toString().split(" ");
+
+        System.out.println(date1.length);
+        return date1[0] +" "+ date1[1] +" " +date1[2] + " " + date1[3]+ " " + date1[4];
 
     }
+
 }
 
