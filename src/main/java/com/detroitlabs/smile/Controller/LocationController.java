@@ -6,7 +6,6 @@ import com.detroitlabs.smile.Services.LocationServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 
@@ -20,17 +19,16 @@ public class LocationController {
     public ModelAndView showHomePage(){
         TopLocationInfo topLocationInfo = locationServices.getLocationInfo();
         Coordinates coordinates = topLocationInfo.getResult().getAddressMatches().get(0).getCoordinates();
+       String geo = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies()
+                .getCensusBlocks().get(0).getGeoID();
+
         ModelAndView mv = new ModelAndView("home");
         mv.addObject("coordinatesX", coordinates.getX());
         mv.addObject("coordinatesY", coordinates.getY());
+        mv.addObject("geo", geo);
 
        return mv;
     }
 
-//    @ResponseBody
-//    @RequestMapping("/")
-//    public String displayLocationInfo(){
-//        return "hello";
-//    }
 
 }
