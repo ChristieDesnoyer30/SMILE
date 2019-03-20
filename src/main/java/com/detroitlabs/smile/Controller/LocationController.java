@@ -1,7 +1,10 @@
 package com.detroitlabs.smile.Controller;
 
+import com.detroitlabs.smile.Model.CrimeDataModel.CrimeData;
+import com.detroitlabs.smile.Model.CrimeDataModel.TopCrimeData;
 import com.detroitlabs.smile.Model.GeoDataModel.Coordinates;
 import com.detroitlabs.smile.Model.GeoDataModel.TopLocationInfo;
+import com.detroitlabs.smile.Services.CrimeServices;
 import com.detroitlabs.smile.Services.LocationServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,17 +18,24 @@ public class LocationController {
     @Autowired
     LocationServices locationServices;
 
+    @Autowired
+    CrimeServices crimeServices;
+
     @RequestMapping("/")
     public ModelAndView showHomePage() {
         TopLocationInfo topLocationInfo = locationServices.getLocationInfo("19 Clifford St Detroit Mi");
         Coordinates coordinates = topLocationInfo.getResult().getAddressMatches().get(0).getCoordinates();
-        String geo = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies()
+        String blockCode = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies()
                 .getCensusBlocks().get(0).getGeoID();
+        TopCrimeData topCrimeData = crimeServices.getCrimeData(blockCode);
+        CrimeData crimeData = topCrimeData.get(0);
+
 
         ModelAndView mv = new ModelAndView("home");
         mv.addObject("coordinatesX", coordinates.getX());
         mv.addObject("coordinatesY", coordinates.getY());
-        mv.addObject("geo", geo);
+        mv.addObject("geo", blockCode);
+        mv.addObject("crimeAddress", crimeData.getAddress());
 
         return mv;
     }
