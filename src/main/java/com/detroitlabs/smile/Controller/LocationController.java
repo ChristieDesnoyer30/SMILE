@@ -9,6 +9,7 @@ import com.detroitlabs.smile.Services.LocationServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 
@@ -22,8 +23,14 @@ public class LocationController {
     CrimeServices crimeServices;
 
     @RequestMapping("/")
-    public ModelAndView showHomePage() {
-        TopLocationInfo topLocationInfo = locationServices.getLocationInfo("19 Clifford St Detroit Mi");
+    public String showPage() {
+        return "index";
+    }
+
+
+    @RequestMapping("getAddress")
+    public ModelAndView showHomePage(@RequestParam("address") String userInputAddress) {
+        TopLocationInfo topLocationInfo = locationServices.getLocationInfo(userInputAddress);
         Coordinates coordinates = topLocationInfo.getResult().getAddressMatches().get(0).getCoordinates();
         String blockCode = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies()
                 .getCensusBlocks().get(0).getGeoID();
@@ -38,10 +45,6 @@ public class LocationController {
         return mv;
     }
 
-    @RequestMapping("/test")
-    public String showPage() {
-        return "index";
-    }
 
 
 }
