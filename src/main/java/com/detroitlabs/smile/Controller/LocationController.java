@@ -30,5 +30,10 @@ public class LocationController {
        return mv;
     }
 
+    @RequestMapping("/test")
+    public String showPage(){
+        return "index";
+    }
+
 
 }
