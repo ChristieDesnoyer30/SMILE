@@ -29,19 +29,25 @@ public class LocationController {
 
 
     @RequestMapping("getAddress")
-    public ModelAndView showHomePage(@RequestParam("address") String userInputAddress)
-    {
-        TopLocationInfo topLocationInfo = locationServices.getLocationInfo(userInputAddress);
-        String blockId = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies().getCensusBlocks().get(0).getGeoID();
-        TopCrimeData highCrimeData = crimeServices.getHighCrimedata(blockId);
-        TopCrimeData lowCrimeData = crimeServices.getLowCrimedata(blockId);
+    public ModelAndView showHomePage(@RequestParam("address") String userInputAddress) {
+        ModelAndView modelAndView = new ModelAndView();
+        if(userInputAddress.contains("DETROIT") || userInputAddress.contains("482")) {
+            TopLocationInfo topLocationInfo = locationServices.getLocationInfo(userInputAddress);
+            String blockId = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies()
+                    .getCensusBlocks().get(0).getGeoID();
+            TopCrimeData highCrimeData = crimeServices.getHighCrimedata(blockId);
+            System.out.println(highCrimeData.size());
+            TopCrimeData lowCrimeData = crimeServices.getLowCrimedata(blockId);
+            System.out.println(lowCrimeData.size());
+            modelAndView.setViewName("practice-areas");
+            modelAndView.addObject("highCrime", highCrimeData);
+            modelAndView.addObject("lowCrime", lowCrimeData);
+        } else{
+            modelAndView.setViewName("index");
+        }
 
-        ModelAndView mv = new ModelAndView("practice-areas");
-        mv.addObject("highCrime", highCrimeData);
-        mv.addObject("lowCrime", lowCrimeData);
 
-
-        return mv;
+        return modelAndView;
     }
 
 
