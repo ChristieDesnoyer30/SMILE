@@ -29,13 +29,17 @@ public class LocationController {
 
 
     @RequestMapping("getAddress")
-    public ModelAndView showHomePage(@RequestParam("address") String userInputAddress) {
+    public ModelAndView showHomePage(@RequestParam("address") String userInputAddress)
+    {
         TopLocationInfo topLocationInfo = locationServices.getLocationInfo(userInputAddress);
-        String blockCode = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies().getCensusBlocks().get(0).getGeoID();
-        TopCrimeData topCrimeData = crimeServices.getCrimeData(blockCode);
+        String blockId = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies().getCensusBlocks().get(0).getGeoID();
+        TopCrimeData highCrimeData = crimeServices.getHighCrimedata(blockId);
+        TopCrimeData lowCrimeData = crimeServices.getLowCrimedata(blockId);
 
         ModelAndView mv = new ModelAndView("practice-areas");
-        mv.addObject("topcrime", topCrimeData);
+        mv.addObject("highCrime", highCrimeData);
+        mv.addObject("lowCrime", lowCrimeData);
+
 
         return mv;
     }
