@@ -31,25 +31,32 @@ public class LocationController {
     @RequestMapping("getAddress")
     public ModelAndView showHomePage(@RequestParam("address") String userInputAddress) {
         ModelAndView modelAndView = new ModelAndView();
-        if(userInputAddress.contains("DETROIT") || userInputAddress.contains("482")) {
+        if (userInputAddress.contains("DETROIT") || userInputAddress.contains("482")) {
             TopLocationInfo topLocationInfo = locationServices.getLocationInfo(userInputAddress);
             String blockId = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies()
                     .getCensusBlocks().get(0).getGeoID();
             TopCrimeData highCrimeData = crimeServices.getHighCrimedata(blockId);
-            System.out.println(highCrimeData.size());
             TopCrimeData lowCrimeData = crimeServices.getLowCrimedata(blockId);
-            System.out.println(lowCrimeData.size());
+            if (highCrimeData.size() >= 2 || lowCrimeData.size() > 6) {
+                modelAndView.addObject("Zone", "NPF");
+            } else if ((highCrimeData.size() < 2 && highCrimeData.size()>=1) || (lowCrimeData.size() >= 3 && lowCrimeData.size() <= 5)) {
+                modelAndView.addObject("Zone", "SPF");
+
+            } else {
+                modelAndView.addObject("Zone", "PF");
+            }
             modelAndView.setViewName("practice-areas");
+
             modelAndView.addObject("highCrime", highCrimeData);
             modelAndView.addObject("lowCrime", lowCrimeData);
-        } else{
+
+        } else {
             modelAndView.setViewName("index");
         }
 
 
         return modelAndView;
     }
-
 
 
 }
