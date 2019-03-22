@@ -27,6 +27,10 @@ public class LocationController {
         return "index";
     }
 
+    @RequestMapping("index.html")
+    public String showHomePage() {
+        return "index";
+    }
 
     @RequestMapping("getAddress")
     public ModelAndView showHomePage(@RequestParam("address") String userInputAddress) {
@@ -45,7 +49,7 @@ public class LocationController {
             } else {
                 modelAndView.addObject("Zone", "PF");
             }
-            modelAndView.setViewName("practice-areas");
+            modelAndView.setViewName("smileresults");
 
             modelAndView.addObject("highCrime", highCrimeData);
             modelAndView.addObject("lowCrime", lowCrimeData);
