@@ -21,10 +21,10 @@ public class LyftServicesTest {
 
         LyftServices lyftServices = new LyftServices();
 
-        int lyftArraySize = lyftServices.fetchLyftData().getNearbyDriversPickUpEtas().size();
+        int lyftArraySize = lyftServices.fetchLyftData(42.402580,-82.937760).getNearbyDriversPickUpEtas().size();
 
 
-        Assert.assertEquals(6, lyftArraySize);
+        Assert.assertEquals(5, lyftArraySize);
 
     }
 }
