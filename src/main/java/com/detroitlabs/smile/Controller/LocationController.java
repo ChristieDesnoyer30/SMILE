@@ -2,8 +2,10 @@ package com.detroitlabs.smile.Controller;
 
 import com.detroitlabs.smile.Model.CrimeDataModel.TopCrimeData;
 import com.detroitlabs.smile.Model.GeoDataModel.TopLocationInfo;
+import com.detroitlabs.smile.Model.LyftData.AllLyftData;
 import com.detroitlabs.smile.Services.CrimeServices;
 import com.detroitlabs.smile.Services.LocationServices;
+import com.detroitlabs.smile.Services.LyftServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,9 @@ public class LocationController {
     @Autowired
     CrimeServices crimeServices;
 
+    @Autowired
+    LyftServices lyftServices;
+
     @RequestMapping("/")
     public String showPage() {
         return "index";
@@ -33,10 +38,10 @@ public class LocationController {
     @RequestMapping("getAddress")
     public ModelAndView showResultsPage(@RequestParam("address") String userInputAddress) {
         ModelAndView modelAndView = new ModelAndView();
+        TopLocationInfo topLocationInfo = locationServices.getLocationInfo(userInputAddress);
+        String blockId = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies()
+                .getCensusBlocks().get(0).getGeoID();
         if (userInputAddress.contains("DETROIT") || userInputAddress.contains("482")) {
-            TopLocationInfo topLocationInfo = locationServices.getLocationInfo(userInputAddress);
-            String blockId = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies()
-                    .getCensusBlocks().get(0).getGeoID();
             TopCrimeData highCrimeData = crimeServices.getHighCrimedata(blockId);
             TopCrimeData lowCrimeData = crimeServices.getLowCrimedata(blockId);
             if (highCrimeData.size() >= 2 || lowCrimeData.size() > 6) {
@@ -55,6 +60,12 @@ public class LocationController {
         } else {
             modelAndView.setViewName("index");
         }
+
+        double lat = topLocationInfo.getResult().getAddressMatches().get(0).getCoordinates().getX();
+        double lng = topLocationInfo.getResult().getAddressMatches().get(0).getCoordinates().getY();
+
+        AllLyftData allLyftData = lyftServices.fetchLyftData(lat,lng);
+        modelAndView.addObject("location", allLyftData.getNearbyDriversPickUpEtas().get(0).getNearby_drivers().get(0).getLocations());
 
 
         return modelAndView;
