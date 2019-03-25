@@ -1,8 +1,6 @@
 package com.detroitlabs.smile.Controller;
 
-import com.detroitlabs.smile.Model.CrimeDataModel.CrimeData;
 import com.detroitlabs.smile.Model.CrimeDataModel.TopCrimeData;
-import com.detroitlabs.smile.Model.GeoDataModel.Coordinates;
 import com.detroitlabs.smile.Model.GeoDataModel.TopLocationInfo;
 import com.detroitlabs.smile.Services.CrimeServices;
 import com.detroitlabs.smile.Services.LocationServices;
@@ -28,12 +26,12 @@ public class LocationController {
     }
 
     @RequestMapping("index.html")
-    public String showHomePage() {
+    public String showResultsPage() {
         return "index";
     }
 
     @RequestMapping("getAddress")
-    public ModelAndView showHomePage(@RequestParam("address") String userInputAddress) {
+    public ModelAndView showResultsPage(@RequestParam("address") String userInputAddress) {
         ModelAndView modelAndView = new ModelAndView();
         if (userInputAddress.contains("DETROIT") || userInputAddress.contains("482")) {
             TopLocationInfo topLocationInfo = locationServices.getLocationInfo(userInputAddress);
@@ -49,7 +47,7 @@ public class LocationController {
             } else {
                 modelAndView.addObject("Zone", "PF");
             }
-            modelAndView.setViewName("smileresults");
+            modelAndView.setViewName("choices");
 
             modelAndView.addObject("highCrime", highCrimeData);
             modelAndView.addObject("lowCrime", lowCrimeData);
