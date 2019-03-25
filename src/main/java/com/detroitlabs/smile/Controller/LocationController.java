@@ -3,6 +3,9 @@ package com.detroitlabs.smile.Controller;
 import com.detroitlabs.smile.Model.CrimeDataModel.TopCrimeData;
 import com.detroitlabs.smile.Model.GeoDataModel.TopLocationInfo;
 import com.detroitlabs.smile.Model.LyftData.AllLyftData;
+import com.detroitlabs.smile.Model.LyftData.Coordinates;
+import com.detroitlabs.smile.Model.LyftData.LocationInfo;
+import com.detroitlabs.smile.Model.LyftData.Locations;
 import com.detroitlabs.smile.Services.CrimeServices;
 import com.detroitlabs.smile.Services.LocationServices;
 import com.detroitlabs.smile.Services.LyftServices;
@@ -11,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.ArrayList;
 
 
 @Controller
@@ -61,11 +66,13 @@ public class LocationController {
             modelAndView.setViewName("index");
         }
 
-        double lat = topLocationInfo.getResult().getAddressMatches().get(0).getCoordinates().getX();
-        double lng = topLocationInfo.getResult().getAddressMatches().get(0).getCoordinates().getY();
+        double lat = topLocationInfo.getResult().getAddressMatches().get(0).getCoordinates().getY();
+        System.out.println(lat);
+        double lng = topLocationInfo.getResult().getAddressMatches().get(0).getCoordinates().getX();
+        System.out.println(lng);
 
-        AllLyftData allLyftData = lyftServices.fetchLyftData(lat,lng);
-        modelAndView.addObject("location", allLyftData.getNearbyDriversPickUpEtas().get(0).getNearby_drivers().get(0).getLocations());
+        ArrayList<LocationInfo> allLyftCoordinates = lyftServices.fetchLyftData(lat,lng).getNearbyDriversPickUpEtas().get(1).getNearby_drivers();
+        modelAndView.addObject("nearbyDrivers",allLyftCoordinates);
 
 
         return modelAndView;

@@ -111,8 +111,11 @@
 <div id="b1" class="containerTab" style="display:none;background:#F8F9FA">
     <!-- If you want the ability to close the container, add a close button -->
     <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-    <h2>Ride Recs</h2>
-    <p>Lorem ipsum..</p>
+    <h2>Your Nearby Drivers</h2>
+    <div th:each="coordinate: ${locations}">
+        <p th:text = "${coordinate.lat}"></p>
+        <p th:text = "${coordinate.lng}"></p>
+    </div>
 </div>
 
 <div id="b2" class="containerTab" style="display:none;background:#F8F9FA">

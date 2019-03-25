@@ -7,12 +7,12 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class LyftServices {
-    public AllLyftData fetchLyftData(Double lat, Double lng){
+    public AllLyftData fetchLyftData(double lat, double lng){
 
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "BEARER hy9zClCgFkm1YrZsy6MN6RF8suIVk88Pkx2vWLaeUkRxZx+hw+gcRyo9mj8uVvwRe1zd2qOXTR8QsYWCy3sFY1iHg0ZPwRAMsS47eiUpgcNnYoU7e1vKfMI=");
+        headers.add("Authorization", "BEARER cp3BhWQ/5cI6dp9G83u6UoapBYnJ8GWoDM1Mzc76HpB1A3efCSezSnRhToIQd0yDjbusd5cnDvVZSF8C/XdOe+kVZEGf3CCG3bNg3kvTUehgRquEdtFb0kQ=");
         headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
         HttpEntity<String> httpEntity = new HttpEntity<>(headers);
 
