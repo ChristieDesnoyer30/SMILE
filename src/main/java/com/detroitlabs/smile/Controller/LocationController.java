@@ -91,6 +91,19 @@ public class LocationController {
         locationAndCrimeZone.setLat(lat);
         locationAndCrimeZone.setLng(lng);
 
+        String coordinates = " ";
+        for(LocationInfo locationInfo: allLyftCoordinates){
+
+            String stringLatitude =Double.toString(locationInfo.getLocations().get(0).getLat());
+            String stringLng =Double.toString(locationInfo.getLocations().get(0).getLng());
+
+           coordinates += stringLatitude.concat(", " + stringLng + ", ");
+
+        }
+
+        System.out.println(coordinates);
+
+
         locationAndCrimeZoneRepository.save(locationAndCrimeZone);
 
         return modelAndView;
