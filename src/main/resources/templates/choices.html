@@ -109,16 +109,9 @@
 </div>
 
 <div id="b1" class="containerTab" style="display:none;background:#F8F9FA">
-    <!-- If you want the ability to close the container, add a close button -->
     <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-
-    <img src = "https://image.maps.api.here.com/mia/1.6/mapview?app_id=LMvLk16fsstsxsTUt6Br&app_code=miYROeMzWoJgrvrbvgdwrA&poi=42.332958,-83.047857,42.361542,-83.069301,42.4734,-83.2219&w=400&h=300">
-
     <h2>Your Nearby Drivers</h2>
-    <div th:each="locationInfo: ${nearbyDrivers}">
-        <p th:text = "${locationInfo.locations.get(0).lat}"></p>
-        <p th:text = "${locationInfo.locations.get(0).lng}"></p>
-    </div>
+    <img th:src="@{'https://image.maps.api.here.com/mia/1.6/mapview?app_id='+${hereappid}+'&app_code='+${hereappcode}+'&poi=' + ${coordinates} + '&w=400&h=300&z=20'}">
 </div>
 
 <div id="b2" class="containerTab" style="display:none;background:#F8F9FA">

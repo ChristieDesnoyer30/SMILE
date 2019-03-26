@@ -9,6 +9,7 @@ import com.detroitlabs.smile.Services.CrimeServices;
 import com.detroitlabs.smile.Services.LocationServices;
 import com.detroitlabs.smile.Services.LyftServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +24,12 @@ public class LocationController {
     private final String NPF = "Non-Pedestrian Friendly";
     private final String PF = "Pedestrian Friendly";
     private final String SPF = "Semi-Pedestrian Friendly";
+
+    @Value("${HERE_APP_ID}")
+    String hereApiID;
+
+    @Value("${HERE_APP_CODE}")
+    String hereApiCode;
 
     @Autowired
     private LocationServices locationServices;
@@ -48,6 +55,8 @@ public class LocationController {
 
     @RequestMapping("getAddress")
     public ModelAndView showResultsPage(@RequestParam("address") String userInputAddress) {
+
+
         ModelAndView modelAndView = new ModelAndView();
         LocationAndCrimeZone locationAndCrimeZone = new LocationAndCrimeZone();
 
@@ -63,7 +72,7 @@ public class LocationController {
             if (highCrimeData.size() >= 2 || lowCrimeData.size() > 6) {
                 locationAndCrimeZone.setCrimeZone(NPF);
                 modelAndView.addObject("Zone", NPF);
-            } else if ((highCrimeData.size() < 2 && highCrimeData.size()>=1) || (lowCrimeData.size() >= 3 && lowCrimeData.size() <= 5)) {
+            } else if ((highCrimeData.size() < 2 && highCrimeData.size() >= 1) || (lowCrimeData.size() >= 3 && lowCrimeData.size() <= 5)) {
                 locationAndCrimeZone.setCrimeZone(SPF);
                 modelAndView.addObject("Zone", SPF);
 
@@ -85,24 +94,21 @@ public class LocationController {
         double lng = topLocationInfo.getResult().getAddressMatches().get(0).getCoordinates().getX();
         System.out.println(lng);
 
-        ArrayList<LocationInfo> allLyftCoordinates = lyftServices.fetchLyftData(lat,lng).getNearbyDriversPickUpEtas().get(1).getNearby_drivers();
-        modelAndView.addObject("nearbyDrivers",allLyftCoordinates);
+        ArrayList<LocationInfo> allLyftCoordinates = lyftServices.fetchLyftData(lat, lng).getNearbyDriversPickUpEtas().get(1).getNearby_drivers();
+        modelAndView.addObject("nearbyDrivers", allLyftCoordinates);
 
         locationAndCrimeZone.setLat(lat);
         locationAndCrimeZone.setLng(lng);
-
         String coordinates = " ";
-        for(LocationInfo locationInfo: allLyftCoordinates){
-
-            String stringLatitude =Double.toString(locationInfo.getLocations().get(0).getLat());
-            String stringLng =Double.toString(locationInfo.getLocations().get(0).getLng());
-
-           coordinates += stringLatitude.concat(", " + stringLng + ", ");
-
+        for (LocationInfo locationInfo : allLyftCoordinates) {
+            String stringLatitude = Double.toString(locationInfo.getLocations().get(0).getLat());
+            String stringLng = Double.toString(locationInfo.getLocations().get(0).getLng());
+            coordinates += stringLatitude.concat(", " + stringLng + ", ");
         }
-
         System.out.println(coordinates);
-
+        modelAndView.addObject("hereappid", hereApiID);
+        modelAndView.addObject("hereappcode", hereApiCode);
+        modelAndView.addObject("coordinates", coordinates);
 
         locationAndCrimeZoneRepository.save(locationAndCrimeZone);
 
