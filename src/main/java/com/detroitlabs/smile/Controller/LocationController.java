@@ -2,10 +2,12 @@ package com.detroitlabs.smile.Controller;
 
 import com.detroitlabs.smile.Model.CrimeDataModel.TopCrimeData;
 import com.detroitlabs.smile.Model.GeoDataModel.TopLocationInfo;
+import com.detroitlabs.smile.Model.LocationAndCrimeZone;
 import com.detroitlabs.smile.Model.LyftData.AllLyftData;
 import com.detroitlabs.smile.Model.LyftData.Coordinates;
 import com.detroitlabs.smile.Model.LyftData.LocationInfo;
 import com.detroitlabs.smile.Model.LyftData.Locations;
+import com.detroitlabs.smile.Repository.LocationAndCrimeZoneRepository;
 import com.detroitlabs.smile.Services.CrimeServices;
 import com.detroitlabs.smile.Services.LocationServices;
 import com.detroitlabs.smile.Services.LyftServices;
@@ -21,14 +23,21 @@ import java.util.ArrayList;
 @Controller
 public class LocationController {
 
-    @Autowired
-    LocationServices locationServices;
+    private final String NPF = "Non-Pedestrian Friendly";
+    private final String PF = "Pedestrian Friendly";
+    private final String SPF = "Semi-Pedestrian Friendly";
 
     @Autowired
-    CrimeServices crimeServices;
+    private LocationServices locationServices;
 
     @Autowired
-    LyftServices lyftServices;
+    private CrimeServices crimeServices;
+
+    @Autowired
+    private LyftServices lyftServices;
+
+    @Autowired
+    private LocationAndCrimeZoneRepository locationAndCrimeZoneRepository;
 
     @RequestMapping("/")
     public String showPage() {
@@ -43,19 +52,27 @@ public class LocationController {
     @RequestMapping("getAddress")
     public ModelAndView showResultsPage(@RequestParam("address") String userInputAddress) {
         ModelAndView modelAndView = new ModelAndView();
+        LocationAndCrimeZone locationAndCrimeZone = new LocationAndCrimeZone();
+
         TopLocationInfo topLocationInfo = locationServices.getLocationInfo(userInputAddress);
         String blockId = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies()
                 .getCensusBlocks().get(0).getGeoID();
+        locationAndCrimeZone.setBlockid(blockId);
+        locationAndCrimeZone.setAddress(userInputAddress);
+
         if (userInputAddress.contains("DETROIT") || userInputAddress.contains("482")) {
             TopCrimeData highCrimeData = crimeServices.getHighCrimedata(blockId);
             TopCrimeData lowCrimeData = crimeServices.getLowCrimedata(blockId);
             if (highCrimeData.size() >= 2 || lowCrimeData.size() > 6) {
-                modelAndView.addObject("Zone", "NPF");
+                locationAndCrimeZone.setCrimeZone(NPF);
+                modelAndView.addObject("Zone", NPF);
             } else if ((highCrimeData.size() < 2 && highCrimeData.size()>=1) || (lowCrimeData.size() >= 3 && lowCrimeData.size() <= 5)) {
-                modelAndView.addObject("Zone", "SPF");
+                locationAndCrimeZone.setCrimeZone(SPF);
+                modelAndView.addObject("Zone", SPF);
 
             } else {
-                modelAndView.addObject("Zone", "PF");
+                locationAndCrimeZone.setCrimeZone(PF);
+                modelAndView.addObject("Zone", PF);
             }
             modelAndView.setViewName("choices");
 
@@ -74,6 +91,10 @@ public class LocationController {
         ArrayList<LocationInfo> allLyftCoordinates = lyftServices.fetchLyftData(lat,lng).getNearbyDriversPickUpEtas().get(1).getNearby_drivers();
         modelAndView.addObject("nearbyDrivers",allLyftCoordinates);
 
+        locationAndCrimeZone.setLat(lat);
+        locationAndCrimeZone.setLng(lng);
+
+        locationAndCrimeZoneRepository.save(locationAndCrimeZone);
 
         return modelAndView;
     }

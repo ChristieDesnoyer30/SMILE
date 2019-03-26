@@ -112,9 +112,9 @@
     <!-- If you want the ability to close the container, add a close button -->
     <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
     <h2>Your Nearby Drivers</h2>
-    <div th:each="coordinate: ${locations}">
-        <p th:text = "${coordinate.lat}"></p>
-        <p th:text = "${coordinate.lng}"></p>
+    <div th:each="locationInfo: ${nearbyDrivers}">
+        <p th:text = "${locationInfo.locations.get(0).lat}"></p>
+        <p th:text = "${locationInfo.locations.get(0).lng}"></p>
     </div>
 </div>
 
