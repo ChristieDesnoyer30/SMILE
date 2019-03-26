@@ -4,3 +4,5 @@
 out/
 
 /gradle.properties
+
+application.properties
