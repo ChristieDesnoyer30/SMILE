@@ -53,6 +53,11 @@ public class LocationController {
         return "index";
     }
 
+    @RequestMapping("/l")
+    public String showL() {
+        return "attorneys";
+    }
+
     @RequestMapping("getAddress")
     public ModelAndView showResultsPage(@RequestParam("address") String userInputAddress) {
 
