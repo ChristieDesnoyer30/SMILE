@@ -8,6 +8,7 @@ import com.detroitlabs.smile.Repository.LocationAndCrimeZoneRepository;
 import com.detroitlabs.smile.Services.CrimeServices;
 import com.detroitlabs.smile.Services.LocationServices;
 import com.detroitlabs.smile.Services.LyftServices;
+import com.detroitlabs.smile.Services.MogoBikeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -43,13 +44,21 @@ public class LocationController {
     @Autowired
     private LocationAndCrimeZoneRepository locationAndCrimeZoneRepository;
 
+    @Autowired
+    MogoBikeService mogoBikeService;
+
     @RequestMapping("/")
     public String showPage() {
+//        Do not uncomment out this method, was only needed once to populate our MogoBike database
+//         mogoBikeService.createMogoBikeDataBaseWithCityBlockIds();
+
         return "index";
     }
 
     @RequestMapping("index.html")
     public String showResultsPage() {
+
+
         return "index";
     }
 
@@ -114,6 +123,8 @@ public class LocationController {
 
         return modelAndView;
     }
+
+
 
 
 }
