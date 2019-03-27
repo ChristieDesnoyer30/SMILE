@@ -2,7 +2,6 @@ package com.detroitlabs.smile.Services;
 
 import com.detroitlabs.smile.Model.GeoDataModel.TopLocationInfo;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
