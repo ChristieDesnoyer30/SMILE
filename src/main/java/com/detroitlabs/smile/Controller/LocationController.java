@@ -112,7 +112,7 @@ public class LocationController {
         for (LocationInfo locationInfo : allLyftCoordinates) {
             String stringLatitude = Double.toString(locationInfo.getLocations().get(0).getLat());
             String stringLng = Double.toString(locationInfo.getLocations().get(0).getLng());
-            coordinates += stringLatitude.concat(", " + stringLng + ", ");
+            coordinates += stringLatitude.concat(", " + stringLng + "||");
         }
         System.out.println(coordinates);
         modelAndView.addObject("hereappid", hereApiID);
