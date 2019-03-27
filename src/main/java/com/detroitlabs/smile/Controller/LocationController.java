@@ -49,7 +49,8 @@ public class LocationController {
 
     @RequestMapping("/")
     public String showPage() {
-         mogoBikeService.createMogoBikeDataBaseWithCityBlockIds();
+//        Do not uncomment out this method, was only needed once to populate our MogoBike database
+//         mogoBikeService.createMogoBikeDataBaseWithCityBlockIds();
 
         return "index";
     }

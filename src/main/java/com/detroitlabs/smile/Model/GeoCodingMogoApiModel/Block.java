@@ -5,13 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Block {
-    private BlockInfo blockInfo;
+    private String fips;
 
-    public BlockInfo getBlockInfo() {
-        return blockInfo;
+    @JsonProperty("FIPS")
+    public String getFips() {
+        return fips;
     }
 
-    public void setBlockInfo(BlockInfo blockInfo) {
-        this.blockInfo = blockInfo;
+    @JsonProperty("FIPS")
+    public void setFips(String fips) {
+        this.fips = fips;
     }
 }

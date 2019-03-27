@@ -10,6 +10,7 @@ public class MogoBikesAndBlockId {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
+    @Column(name="city_block_id")
     private String cityBlockId;
     private String name;
     private String docks;

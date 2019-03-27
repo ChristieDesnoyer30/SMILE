@@ -40,21 +40,16 @@ public class MogoBikeService {
         for(BikeInfo bikes : allBikeData){
             double longitude = bikes.getLocation().getCoordinates().get(0);
             double latitude = bikes.getLocation().getCoordinates().get(1);
-            System.out.println(latitude);
-            System.out.println(longitude);
             String name = bikes.getName();
             String docks = bikes.getDocks();
-            System.out.println(name);
-            System.out.println(docks);
 
             AllGeoData allGeoData = fetchCityBlockCodes(latitude,longitude);
 
-            String blockId = allGeoData.getBlock().getBlockInfo().getFips();
+            String blockId = allGeoData.getBlock().getFips();
 
-//
-//            MogoBikesAndBlockId mogoBikesAndBlockId =  new MogoBikesAndBlockId(cityBlockId, name, docks, latitude, longitude);
-//
-//            mogoBikeRepo.save(mogoBikesAndBlockId);
+            MogoBikesAndBlockId mogoBikesAndBlockId =  new MogoBikesAndBlockId(blockId, name, docks, latitude, longitude);
+
+            mogoBikeRepo.save(mogoBikesAndBlockId);
 
         }
 
