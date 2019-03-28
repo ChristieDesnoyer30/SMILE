@@ -116,6 +116,11 @@
 
     <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${coordinates} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}">
     <!--<img th:src="@{'https://image.maps.api.here.com/mia/1.6/mapview?app_id='+${hereappid}+'&app_code='+${hereappcode}+'&poi=' + ${coordinates} + '&w=400&h=300&z=20'}">-->
+
+    <h2>Nearby Mogo Bike Stations</h2>
+    <p th:text="${bikelocation}"/>
+    <p th:text="${bikedock}"/>
+
 </div>
 
 <div id="b2" class="containerTab" style="display:none;background:#F8F9FA">

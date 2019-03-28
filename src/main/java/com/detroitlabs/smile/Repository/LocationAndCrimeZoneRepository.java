@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import javax.xml.stream.Location;
 
 
-@Repository
 public interface LocationAndCrimeZoneRepository extends JpaRepository<LocationAndCrimeZone, Integer> {
 
 

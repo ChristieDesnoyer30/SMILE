@@ -4,7 +4,9 @@ import com.detroitlabs.smile.Model.CrimeDataModel.TopCrimeData;
 import com.detroitlabs.smile.Model.GeoDataModel.TopLocationInfo;
 import com.detroitlabs.smile.Model.LocationAndCrimeZone;
 import com.detroitlabs.smile.Model.LyftData.LocationInfo;
+import com.detroitlabs.smile.Model.MogoBikesAndBlockId;
 import com.detroitlabs.smile.Repository.LocationAndCrimeZoneRepository;
+import com.detroitlabs.smile.Repository.MogoBikesRepository;
 import com.detroitlabs.smile.Services.CrimeServices;
 import com.detroitlabs.smile.Services.LocationServices;
 import com.detroitlabs.smile.Services.LyftServices;
@@ -45,7 +47,10 @@ public class LocationController {
     private LocationAndCrimeZoneRepository locationAndCrimeZoneRepository;
 
     @Autowired
-    MogoBikeService mogoBikeService;
+    private MogoBikeService mogoBikeService;
+
+    @Autowired
+    private MogoBikesRepository mogoBikesRepository;
 
     @RequestMapping("/")
     public String showPage() {
@@ -115,9 +120,19 @@ public class LocationController {
             coordinates += stringLatitude.concat(", " + stringLng + "||");
         }
         System.out.println(coordinates);
-        modelAndView.addObject("hereappid", hereApiID);
-        modelAndView.addObject("hereappcode", hereApiCode);
+//        modelAndView.addObject("hereappid", hereApiID);
+//        modelAndView.addObject("hereappcode", hereApiCode);
         modelAndView.addObject("coordinates", coordinates);
+
+            MogoBikesAndBlockId mogoBikesAndBlockId = mogoBikesRepository.findByCityBlockId(blockId);
+
+            if (mogoBikesAndBlockId != null) {
+                modelAndView.addObject("bikelocation", "Bike Location: " + mogoBikesAndBlockId.getName());
+                modelAndView.addObject("bikedock", "Number of docks in location: " + mogoBikesAndBlockId.getDocks());
+            } else{
+                modelAndView.addObject("bikelocation", "NO BIKES");
+                modelAndView.addObject("bikedock", "AVAILABLE");
+            }
 
         locationAndCrimeZoneRepository.save(locationAndCrimeZone);
 
