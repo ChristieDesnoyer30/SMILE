@@ -61,6 +61,12 @@ public class LocationController {
 
         return "index";
     }
+    @RequestMapping("safety-tips.html")
+    public String showSafetyTips() {
+
+
+        return "safety-tips";
+    }
 
     @RequestMapping("getAddress")
     public ModelAndView showResultsPage(@RequestParam("address") String userInputAddress) {
