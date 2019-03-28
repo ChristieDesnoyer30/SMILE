@@ -5,12 +5,12 @@ import com.detroitlabs.smile.Model.GeoDataModel.TopLocationInfo;
 import com.detroitlabs.smile.Model.LocationAndCrimeZone;
 import com.detroitlabs.smile.Model.LyftData.LocationInfo;
 import com.detroitlabs.smile.Model.MogoBikesAndBlockId;
+import com.detroitlabs.smile.Model.SpinDataModel.AllSpinData;
+import com.detroitlabs.smile.Model.SpinDataModel.SpinScooter;
+import com.detroitlabs.smile.Model.SpinDataModel.Vehicles;
 import com.detroitlabs.smile.Repository.LocationAndCrimeZoneRepository;
 import com.detroitlabs.smile.Repository.MogoBikesRepository;
-import com.detroitlabs.smile.Services.CrimeServices;
-import com.detroitlabs.smile.Services.LocationServices;
-import com.detroitlabs.smile.Services.LyftServices;
-import com.detroitlabs.smile.Services.MogoBikeService;
+import com.detroitlabs.smile.Services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -52,6 +53,9 @@ public class LocationController {
     @Autowired
     MogoBikesRepository mogoBikesRepository;
 
+    @Autowired
+    SpinService spinService;
+
 
     @RequestMapping("/")
     public String showPage() {
@@ -75,7 +79,7 @@ public class LocationController {
     }
 
     @RequestMapping("getAddress")
-    public ModelAndView showResultsPage(LocationAndCrimeZone locationAndCrimeZone, @RequestParam("startAddress") String startAddress, @RequestParam("address") String endAddress) {
+    public ModelAndView showResultsPage(LocationAndCrimeZone locationAndCrimeZone, @RequestParam("startAddress") String startAddress, @RequestParam("address") String endAddress) throws IOException {
 
 
         ModelAndView modelAndView = new ModelAndView();
@@ -144,6 +148,10 @@ public class LocationController {
         }
 
         locationAndCrimeZoneRepository.save(locationAndCrimeZone);
+
+       AllSpinData allSpinData= spinService.fetchSpinData(startLat,startLng);
+
+       modelAndView.addObject("vehicles", allSpinData.getVehicles());
 
         return modelAndView;
     }
