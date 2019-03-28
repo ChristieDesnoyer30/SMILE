@@ -115,6 +115,11 @@
 <!--&markers=color:blue%7Clabel:' + ${coordinates} +'&key=AIzaSyCpxYFcbbTp2Pn4c8WENjANMpaon9ixDbo'}"/>-->
 
     <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${coordinates} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}">
+
+    <h2>Nearyby MogoBike Docks</h2>
+    <p th:text="${bikelocation}"/>
+    <p th:text="${bikedock}"/>
+
     <!--<img th:src="@{'https://image.maps.api.here.com/mia/1.6/mapview?app_id='+${hereappid}+'&app_code='+${hereappcode}+'&poi=' + ${coordinates} + '&w=400&h=300&z=20'}">-->
 </div>
 
