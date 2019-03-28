@@ -52,6 +52,7 @@ public class LocationController {
     @Autowired
     MogoBikesRepository mogoBikesRepository;
 
+
     @RequestMapping("/")
     public String showPage() {
 //        Do not uncomment out this method, was only needed once to populate our MogoBike database
@@ -74,19 +75,41 @@ public class LocationController {
     }
 
     @RequestMapping("getAddress")
-    public ModelAndView showResultsPage(@RequestParam("address") String userInputAddress) {
+    public ModelAndView showResultsPage(LocationAndCrimeZone locationAndCrimeZone, @RequestParam("startAddress") String startAddress, @RequestParam("address") String endAddress) {
 
 
         ModelAndView modelAndView = new ModelAndView();
-        LocationAndCrimeZone locationAndCrimeZone = new LocationAndCrimeZone();
 
-        TopLocationInfo topLocationInfo = locationServices.getLocationInfo(userInputAddress);
-        String blockId = topLocationInfo.getResult().getAddressMatches().get(0).getGeographies()
-                .getCensusBlocks().get(0).getGeoID();
+        TopLocationInfo startLocationInfo = locationServices.getLocationInfo(startAddress);
+        double startLat = locationServices.getLatitude(startLocationInfo);
+        double startLng = locationServices.getLongtitude(startLocationInfo);
+
+
+        ArrayList<LocationInfo> allLyftCoordinates = lyftServices.fetchLyftData(startLat, startLng).getNearbyDriversPickUpEtas().get(1).getNearby_drivers();
+
+
+        String coordinates = " ";
+        for (LocationInfo locationInfo : allLyftCoordinates) {
+            String stringLatitude = Double.toString(locationInfo.getLocations().get(0).getLat());
+            String stringLng = Double.toString(locationInfo.getLocations().get(0).getLng());
+            coordinates += stringLatitude.concat(", " + stringLng + "||");
+        }
+
+        modelAndView.addObject("coordinates", coordinates);
+
+
+        TopLocationInfo endLocationInfo = locationServices.getLocationInfo(endAddress);
+        double endLat = locationServices.getLatitude(endLocationInfo);
+        double endLng = locationServices.getLongtitude(endLocationInfo);
+
+        locationAndCrimeZone.setLat(endLat);
+        locationAndCrimeZone.setLng(endLng);
+
+        String blockId = locationServices.getBlockID(endLocationInfo);
         locationAndCrimeZone.setBlockid(blockId);
-        locationAndCrimeZone.setAddress(userInputAddress);
+        locationAndCrimeZone.setAddress(endAddress);
 
-        if (userInputAddress.contains("DETROIT") || userInputAddress.contains("482")) {
+        if (endAddress.contains("DETROIT") || endAddress.contains("482")) {
             TopCrimeData highCrimeData = crimeServices.getHighCrimedata(blockId);
             TopCrimeData lowCrimeData = crimeServices.getLowCrimedata(blockId);
             if (highCrimeData.size() >= 2 || lowCrimeData.size() > 6) {
@@ -109,26 +132,6 @@ public class LocationController {
             modelAndView.setViewName("index");
         }
 
-        double lat = topLocationInfo.getResult().getAddressMatches().get(0).getCoordinates().getY();
-        System.out.println(lat);
-        double lng = topLocationInfo.getResult().getAddressMatches().get(0).getCoordinates().getX();
-        System.out.println(lng);
-
-        ArrayList<LocationInfo> allLyftCoordinates = lyftServices.fetchLyftData(lat, lng).getNearbyDriversPickUpEtas().get(1).getNearby_drivers();
-        modelAndView.addObject("nearbyDrivers", allLyftCoordinates);
-
-        locationAndCrimeZone.setLat(lat);
-        locationAndCrimeZone.setLng(lng);
-        String coordinates = " ";
-        for (LocationInfo locationInfo : allLyftCoordinates) {
-            String stringLatitude = Double.toString(locationInfo.getLocations().get(0).getLat());
-            String stringLng = Double.toString(locationInfo.getLocations().get(0).getLng());
-            coordinates += stringLatitude.concat(", " + stringLng + "||");
-        }
-        System.out.println(coordinates);
-        modelAndView.addObject("hereappid", hereApiID);
-        modelAndView.addObject("hereappcode", hereApiCode);
-        modelAndView.addObject("coordinates", coordinates);
 
         MogoBikesAndBlockId mogoBikesAndBlockId = mogoBikesRepository.findByCityBlockId(blockId);
 
