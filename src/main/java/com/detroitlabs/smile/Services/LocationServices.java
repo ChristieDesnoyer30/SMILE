@@ -14,4 +14,20 @@ public class LocationServices {
 
     }
 
+    public double getLatitude(TopLocationInfo topLocationInfo){
+        return topLocationInfo.getResult().getAddressMatches().get(0).getCoordinates().getY();
+
+    }
+
+    public double getLongtitude(TopLocationInfo topLocationInfo){
+        return topLocationInfo.getResult().getAddressMatches().get(0).getCoordinates().getX();
+
+    }
+
+    public String getBlockID(TopLocationInfo topLocationInfo){
+        return  topLocationInfo.getResult().getAddressMatches().get(0).getGeographies()
+                .getCensusBlocks().get(0).getGeoID();
+    }
+
+
 }
