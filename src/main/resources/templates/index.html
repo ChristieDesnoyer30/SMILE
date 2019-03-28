@@ -57,14 +57,19 @@
           <div class="col-md-10 text-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
           	<h2 class="subheading" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">We are here to help!</h2>
             <h1 class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
-            	<span>Safety</span> . <span>Improvement.</span> . <span>A Better Today.</span>
+            	<span>Safety</span>  <span>Improvement</span> <span>A Better Today</span>
             </h1>
 			  <form action="getAddress" method="get">
-           <input type="text" name="address" placeholder="Enter your destination" onkeyup="this.value
+
+				  <input type="text" name = "startAddress" placeholder="Enter Starting Address" size="35" onkeyup="this.value
+           						= this.value.toUpperCase()" required>
+				  <br>
+				  <input type="text" name="address" placeholder="Enter Ending Address" size="35" onkeyup="this.value
            						= this.value.toUpperCase()" required>
 				  <br>
 				  <input type="submit" value="SMILE">
 			  </form>
+
           </div>
         </div>
       </div>
