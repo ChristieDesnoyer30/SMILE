@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 
 
 public class SpinServiceTest {
@@ -20,7 +21,7 @@ public class SpinServiceTest {
 
 
     @Test
-    public void shouldfetchSpinDataAndReturnArrayOfVehicles() {
+    public void shouldfetchSpinDataAndReturnArrayOfVehicles() throws IOException {
 
         AllSpinData spinData = testSpinService.fetchSpinData(42.332958,-83.047857);
         Assert.assertNotNull(spinData);
