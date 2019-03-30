@@ -115,6 +115,7 @@ public class LocationController {
         String blockID = locationServices.getBlockID(endLocationInfo);
 
         locationAndCrimeZone.setBlockid(blockID);
+        modelAndView.addObject("blockID", blockID);
         locationAndCrimeZone.setAddress(endAddress);
 
         if (endAddress.contains("DETROIT") || endAddress.contains("482")) {
@@ -157,7 +158,7 @@ public class LocationController {
     }
 
     @RequestMapping("getEmail")
-    public ModelAndView showEmailResult(@RequestParam("blockid") String blockID,@RequestParam("name") String name,@RequestParam("email") String email,@RequestParam("category") String category,@RequestParam("message") String message) {
+    public ModelAndView showEmailResult(@RequestParam("blockidHidden") String blockID,@RequestParam("name") String name,@RequestParam("email") String email,@RequestParam("category") String category,@RequestParam("message") String message) {
 
         ModelAndView modelAndView = new ModelAndView();
 
