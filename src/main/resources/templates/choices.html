@@ -56,6 +56,16 @@
         font-size: 35px;
         cursor: pointer;
     }
+        .box{
+            display: none;
+            width: 100%;
+        }
+
+        a:hover + .box,.box:hover{
+            display: block;
+            position: relative;
+            z-index: 100;
+        }
     </style>
     <script>
         function openTab(tabName) {
@@ -105,7 +115,7 @@
 <div class="row">
     <div class="column" onclick="openTab('b1');" style="background:#DBDBDB; font-color: white">Ride Recs</div>
     <div class="column" onclick="openTab('b2');" style="background:#E8BF63;">Crime Data</div>
-    <div class="column" onclick="openTab('b3');" style="background:#DBDBDB;">Better Mile:<br> Send Improvement Suggestions</div>
+    <div class="column" onclick="openTab('b3');" style="background:#DBDBDB;">Better Mile:<br> See something? Say something</div>
 </div>
 
 <div id="b1" class="containerTab" style="display:none;background:#F8F9FA">
@@ -162,7 +172,9 @@
 
 <div id="b3" class="containerTab" style="display:none;background:#F8F9FA">
     <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-    <h2>See something you'd like to improve on your block? Send a message to your city council here:</h2>
+    <h2>See something you'd like to improve on your block? Send a message here:</h2>
+    <a href="https://detroitmi.gov/webapp/improve-detroit-report-issue-online">Improve Detroit Website</a>
+    <div class="box"><iframe src="https://detroitmi.gov/webapp/improve-detroit-report-issue-online" width = "500px" height = "500px"></iframe></div>
     <form action="getEmail" method ="get">
         <div class="form-group">
             <input type="hidden" name = "blockidHidden" class="form-control" th:value ="${blockID}">
@@ -174,10 +186,16 @@
             <input type="text" name = "email"class="form-control" placeholder="Your Email">
         </div>
         <div class="form-group">
-            <input type="text" name ="category" class="form-control" placeholder="Subject">
+            <select type="text" name ="category" class="form-control">
+                <option value="Abandoned Vehicle"></option>
+                <option value="Sidewalk">Uneven Sidewalk</option>
+                <option value="Litter">Litter</option>
+                <option value="Lighting">Lighting Issue</option>
+
+            </select>
         </div>
         <div class="form-group">
-            <textarea name="message" cols="30" rows="7" class="form-control" placeholder="Message"></textarea>
+            <textarea name="message" cols="30" rows="7" class="form-control" placeholder="Description"></textarea>
         </div>
         <div class="form-group">
             <input type="submit" value="Send message" class="btn btn-primary">
