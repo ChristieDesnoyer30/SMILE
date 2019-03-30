@@ -1,16 +1,19 @@
 package com.detroitlabs.smile.Controller;
 
 import com.detroitlabs.smile.Model.CrimeDataModel.TopCrimeData;
+import com.detroitlabs.smile.Model.EmailForm;
 import com.detroitlabs.smile.Model.GeoDataModel.TopLocationInfo;
 import com.detroitlabs.smile.Model.LocationAndCrimeZone;
 import com.detroitlabs.smile.Model.LyftData.LocationInfo;
 import com.detroitlabs.smile.Model.MogoBikesAndBlockId;
+import com.detroitlabs.smile.Repository.EmailFormRepository;
 import com.detroitlabs.smile.Repository.LocationAndCrimeZoneRepository;
 import com.detroitlabs.smile.Repository.MogoBikesRepository;
 import com.detroitlabs.smile.Services.CrimeServices;
 import com.detroitlabs.smile.Services.LocationServices;
 import com.detroitlabs.smile.Services.LyftServices;
 import com.detroitlabs.smile.Services.MogoBikeService;
+import org.apache.http.entity.StringEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -47,10 +50,13 @@ public class LocationController {
     private LocationAndCrimeZoneRepository locationAndCrimeZoneRepository;
 
     @Autowired
-    MogoBikeService mogoBikeService;
+    private MogoBikeService mogoBikeService;
 
     @Autowired
-    MogoBikesRepository mogoBikesRepository;
+    private MogoBikesRepository mogoBikesRepository;
+
+    @Autowired
+    private EmailFormRepository emailFormRepository;
 
 
     @RequestMapping("/")
@@ -67,6 +73,7 @@ public class LocationController {
 
         return "index";
     }
+
     @RequestMapping("safety-tips.html")
     public String showSafetyTips() {
 
@@ -75,7 +82,7 @@ public class LocationController {
     }
 
     @RequestMapping("getAddress")
-    public ModelAndView showResultsPage(LocationAndCrimeZone locationAndCrimeZone, @RequestParam("startAddress") String startAddress, @RequestParam("address") String endAddress) {
+    public ModelAndView showResultsPage(LocationAndCrimeZone locationAndCrimeZone,@RequestParam("startAddress") String startAddress,@RequestParam("address") String endAddress) {
 
 
         ModelAndView modelAndView = new ModelAndView();
@@ -85,7 +92,7 @@ public class LocationController {
         double startLng = locationServices.getLongtitude(startLocationInfo);
 
 
-        ArrayList<LocationInfo> allLyftCoordinates = lyftServices.fetchLyftData(startLat, startLng).getNearbyDriversPickUpEtas().get(1).getNearby_drivers();
+        ArrayList<LocationInfo> allLyftCoordinates = lyftServices.fetchLyftData(startLat,startLng).getNearbyDriversPickUpEtas().get(1).getNearby_drivers();
 
 
         String coordinates = " ";
@@ -95,7 +102,7 @@ public class LocationController {
             coordinates += stringLatitude.concat(", " + stringLng + "||");
         }
 
-        modelAndView.addObject("coordinates", coordinates);
+        modelAndView.addObject("coordinates",coordinates);
 
 
         TopLocationInfo endLocationInfo = locationServices.getLocationInfo(endAddress);
@@ -105,42 +112,43 @@ public class LocationController {
         locationAndCrimeZone.setLat(endLat);
         locationAndCrimeZone.setLng(endLng);
 
-        String blockId = locationServices.getBlockID(endLocationInfo);
-        locationAndCrimeZone.setBlockid(blockId);
+        String blockID = locationServices.getBlockID(endLocationInfo);
+
+        locationAndCrimeZone.setBlockid(blockID);
         locationAndCrimeZone.setAddress(endAddress);
 
         if (endAddress.contains("DETROIT") || endAddress.contains("482")) {
-            TopCrimeData highCrimeData = crimeServices.getHighCrimedata(blockId);
-            TopCrimeData lowCrimeData = crimeServices.getLowCrimedata(blockId);
+            TopCrimeData highCrimeData = crimeServices.getHighCrimedata(blockID);
+            TopCrimeData lowCrimeData = crimeServices.getLowCrimedata(blockID);
             if (highCrimeData.size() >= 2 || lowCrimeData.size() > 6) {
                 locationAndCrimeZone.setCrimeZone(NPF);
-                modelAndView.addObject("Zone", NPF);
+                modelAndView.addObject("Zone",NPF);
             } else if ((highCrimeData.size() < 2 && highCrimeData.size() >= 1) || (lowCrimeData.size() >= 3 && lowCrimeData.size() <= 5)) {
                 locationAndCrimeZone.setCrimeZone(SPF);
-                modelAndView.addObject("Zone", SPF);
+                modelAndView.addObject("Zone",SPF);
 
             } else {
                 locationAndCrimeZone.setCrimeZone(PF);
-                modelAndView.addObject("Zone", PF);
+                modelAndView.addObject("Zone",PF);
             }
             modelAndView.setViewName("choices");
 
-            modelAndView.addObject("highCrime", highCrimeData);
-            modelAndView.addObject("lowCrime", lowCrimeData);
+            modelAndView.addObject("highCrime",highCrimeData);
+            modelAndView.addObject("lowCrime",lowCrimeData);
 
         } else {
             modelAndView.setViewName("index");
         }
 
 
-        MogoBikesAndBlockId mogoBikesAndBlockId = mogoBikesRepository.findByCityBlockId(blockId);
+        MogoBikesAndBlockId mogoBikesAndBlockId = mogoBikesRepository.findByCityBlockId(blockID);
 
         if (mogoBikesAndBlockId != null) {
-            modelAndView.addObject("bikelocation", "Bike Location: " + mogoBikesAndBlockId.getName());
-            modelAndView.addObject("bikedock", "Number of docks in location: " + mogoBikesAndBlockId.getDocks());
-        } else{
-            modelAndView.addObject("bikelocation", "NO BIKES");
-            modelAndView.addObject("bikedock", "AVAILABLE");
+            modelAndView.addObject("bikelocation","Bike Location: " + mogoBikesAndBlockId.getName());
+            modelAndView.addObject("bikedock","Number of docks in location: " + mogoBikesAndBlockId.getDocks());
+        } else {
+            modelAndView.addObject("bikelocation","NO BIKES");
+            modelAndView.addObject("bikedock","AVAILABLE");
         }
 
         locationAndCrimeZoneRepository.save(locationAndCrimeZone);
@@ -148,7 +156,20 @@ public class LocationController {
         return modelAndView;
     }
 
+    @RequestMapping("getEmail")
+    public ModelAndView showEmailResult(@RequestParam("blockid") String blockID,@RequestParam("name") String name,@RequestParam("email") String email,@RequestParam("category") String category,@RequestParam("message") String message) {
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        EmailForm emailForm = new EmailForm(blockID,name,email,category,message);
+
+        modelAndView.addObject("sentEmail",emailForm);
+        modelAndView.setViewName("choices");
+
+        emailFormRepository.save(emailForm);
+        return modelAndView;
 
 
+    }
 
 }

@@ -21,6 +21,13 @@ public class EmailForm {
     public EmailForm() {
     }
 
+    public EmailForm(String name,String email,String category,String message) {
+        this.name = name;
+        this.email = email;
+        this.category = category;
+        this.message = message;
+    }
+
     public EmailForm(String blockid,String name,String email,String category,String message) {
         this.blockid = blockid;
         this.name = name;
