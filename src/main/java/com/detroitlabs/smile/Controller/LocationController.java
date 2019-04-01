@@ -12,6 +12,7 @@ import com.detroitlabs.smile.Model.SpinDataModel.AllSpinData;
 import com.detroitlabs.smile.Repository.LocationAndCrimeZoneRepository;
 import com.detroitlabs.smile.Repository.MogoBikesRepository;
 import com.detroitlabs.smile.Services.*;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -180,6 +181,16 @@ public class LocationController {
         emailFormRepository.save(emailForm);
         return modelAndView;
 
+    }
+
+    @RequestMapping("/test")
+    public ModelAndView showMap() throws IOException {
+        ModelAndView modelAndView = new ModelAndView("testMap");
+        Vehicles vehicles = spinService.fetchSpinData(42.32833583, -83.03767604).getVehicles();
+
+        modelAndView.addObject("vehiclecoords", spinService.coordinateInfoForMaps(vehicles));
+
+        return modelAndView;
     }
 
 }

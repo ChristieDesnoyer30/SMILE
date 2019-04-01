@@ -28,61 +28,67 @@
     <link rel="stylesheet" href="css/style.css">
     <style>
         .column {
-        float: left;
-        width: 33.33%;
-        padding: 50px;
-        text-align: center;
-        font-size: 25px;
-        cursor: pointer;
-        color: black;
-    }
+            float: left;
+            width: 33.33%;
+            padding: 50px;
+            text-align: center;
+            font-size: 25px;
+            cursor: pointer;
+            color: black;
+        }
 
-    .containerTab {
-        padding: 20px;
-        color: black;
-    }
+        .containerTab {
+            padding: 20px;
+            color: black;
+        }
 
-    /* Clear floats after the columns */
-    .row:after {
-        content: "";
-        display: table;
-        clear: both;
-    }
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
 
-    /* Closable button inside the image */
-    .closebtn {
-        float: right;
-        color: white;
-        font-size: 35px;
-        cursor: pointer;
-    }
-        .box{
+        /* Closable button inside the image */
+        .closebtn {
+            float: right;
+            color: white;
+            font-size: 35px;
+            cursor: pointer;
+        }
+
+        .box {
             display: none;
             width: 100%;
         }
 
-        a:hover + .box,.box:hover{
+        a:hover + .box, .box:hover {
             display: block;
             position: relative;
             z-index: 100;
         }
+
     </style>
+
     <script>
         function openTab(tabName) {
-        var i, x;
-        x = document.getElementsByClassName("containerTab");
-        for (i = 0; i < x.length; i++) {
-            x[i].style.display = "none";
+            var i, x;
+            x = document.getElementsByClassName("containerTab");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            document.getElementById(tabName).style.display = "block";
         }
-        document.getElementById(tabName).style.display = "block";
-    }</script>
+
+    </script>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
     <div class="container">
         <a class="navbar-brand" href="/"><img src="/images/SmileLogo.png" width="300px" length="300px"/></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="oi oi-menu"></span> Menu
         </button>
 
@@ -100,13 +106,16 @@
 </nav>
 <!-- END nav -->
 
-<section class="hero-wrap hero-wrap-2" style="background-image: url('images/about.jpg');" data-stellar-background-ratio="0.5">
+<section class="hero-wrap hero-wrap-2" style="background-image: url('images/about.jpg');"
+         data-stellar-background-ratio="0.5">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text align-items-end justify-content-center">
             <div class="col-md-9 ftco-animate pb-5 text-center">
-                <h1 class="mb-3 bread" th:text ="${Zone}"></h1>
-                <p class="breadcrumbs"><span class="mr-2"><a href="/">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>S.MILE Results <i class="ion-ios-arrow-forward"></i></span></p>
+                <h1 class="mb-3 bread" th:text="${Zone}"></h1>
+                <p class="breadcrumbs"><span class="mr-2"><a href="/">Home <i
+                        class="ion-ios-arrow-forward"></i></a></span> <span>S.MILE Results <i
+                        class="ion-ios-arrow-forward"></i></span></p>
             </div>
         </div>
     </div>
@@ -115,7 +124,9 @@
 <div class="row">
     <div class="column" onclick="openTab('b1');" style="background:#DBDBDB; font-color: white">Ride Recs</div>
     <div class="column" onclick="openTab('b2');" style="background:#E8BF63;">Crime Data</div>
-    <div class="column" onclick="openTab('b3');" style="background:#DBDBDB;">Better Mile:<br> See something? Say something</div>
+    <div class="column" onclick="openTab('b3');" style="background:#DBDBDB;">Better Mile:<br> See something? Say
+        something
+    </div>
 </div>
 
 
@@ -125,8 +136,9 @@
     <div th:switch="${zoneRecs}">
         <div th:case="'Non-Pedestrian Friendly'">
             <h2>Your Nearby Drivers</h2>
-            <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${coordinates} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}" width="60%" height="60%">
-    </div>
+            <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${coordinates} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}"
+                 width="60%" height="60%">
+        </div>
 
         <div th:case="'Semi-Pedestrian Friendly'">
             <h2>Your Nearby Drivers</h2>
@@ -134,7 +146,8 @@
             <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${coordinates} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}" width="60%" height="60%">
 
             <h2>Nearby Spin Scooter</h2>
-            <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${vehiclecoords} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}" width="60%" height="60%">
+            <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${vehiclecoords} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}"
+                 width="60%" height="60%">
             <h2>Nearby MogoBike Docks</h2>
             <div th:each="bike : ${bikes}">
                 <p th:text="${bike.name}"/>
@@ -145,10 +158,12 @@
         <div th:case="'Pedestrian Friendly'">
 
             <h2>Your Nearby Drivers</h2>
-            <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${coordinates} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}" width="60%" height="60%">
+            <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${coordinates} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}"
+                 width="60%" height="60%">
 
             <h2>Nearby Spin Scooter</h2>
-            <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${vehiclecoords} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}" width="60%" height="60%">
+            <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${vehiclecoords} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}"
+                 width="60%" height="60%">
 
             <h2>Nearby MogoBike Docks</h2>
             <div th:each="bike : ${bikes}">
@@ -159,39 +174,39 @@
         </div>
     </div>
 
-   </div>
+</div>
 </div>
 
 <div id="b2" class="containerTab" style="display:none;background:#F8F9FA">
     <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
     <section class="ftco-section bg-light">
         <div class="container">
-    <h1>Crime Data</h1>
-    <div class="row d-flex justify-content-center">
+            <h1>Crime Data</h1>
+            <div class="row d-flex justify-content-center">
                 <!--<h1>High</h1>-->
-                <div th:each= "crime: ${highCrime}" class="col-md-4 col-lg-3 text-center">
+                <div th:each="crime: ${highCrime}" class="col-md-4 col-lg-3 text-center">
                     <div class="practice-area bg-white ftco-animate p-4">
                         <div class="icon d-flex justify-content-center align-items-center">
                             <span class="flaticon-handcuffs"></span>
                         </div>
-                        <h3 class="mb-3" th:text = "${crime.offenseCategory}" ></h3>
-                        <p th:text = "${crime.chargeDescription}" ></p>
-                        <p th:text = "${crime.neighborhood}" ></p>
-                        <p th:text = "${crime.address}" ></p>
-                        <p th:text = "${crime.formattedDate()} + ' ' + ${crime.year}" ></p>
+                        <h3 class="mb-3" th:text="${crime.offenseCategory}"></h3>
+                        <p th:text="${crime.chargeDescription}"></p>
+                        <p th:text="${crime.neighborhood}"></p>
+                        <p th:text="${crime.address}"></p>
+                        <p th:text="${crime.formattedDate()} + ' ' + ${crime.year}"></p>
                     </div>
                 </div>
                 <!--<h1>Low</h1>-->
-                <div th:each= "crime: ${lowCrime}" class="col-md-4 col-lg-3 text-center">
+                <div th:each="crime: ${lowCrime}" class="col-md-4 col-lg-3 text-center">
                     <div class="practice-area bg-white ftco-animate p-4">
                         <div class="icon d-flex justify-content-center align-items-center">
                             <span class="flaticon-handcuffs"></span>
                         </div>
-                        <h3 class="mb-3" th:text = "${crime.offenseCategory}" ></h3>
-                        <p th:text = "${crime.chargeDescription}" ></p>
-                        <p th:text = "${crime.neighborhood}" ></p>
-                        <p th:text = "${crime.address}" ></p>
-                        <p th:text = "${crime.formattedDate()} + ' ' + ${crime.year}" ></p>
+                        <h3 class="mb-3" th:text="${crime.offenseCategory}"></h3>
+                        <p th:text="${crime.chargeDescription}"></p>
+                        <p th:text="${crime.neighborhood}"></p>
+                        <p th:text="${crime.address}"></p>
+                        <p th:text="${crime.formattedDate()} + ' ' + ${crime.year}"></p>
                     </div>
                 </div>
             </div>
@@ -203,19 +218,22 @@
     <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
     <h2>See something you'd like to improve on your block? Send a message here:</h2>
     <a href="https://detroitmi.gov/webapp/improve-detroit-report-issue-online">Improve Detroit Website</a>
-    <div class="box"><iframe src="https://detroitmi.gov/webapp/improve-detroit-report-issue-online" width = "500px" height = "500px"></iframe></div>
-    <form action="getEmail" method ="get">
+    <div class="box">
+        <iframe src="https://detroitmi.gov/webapp/improve-detroit-report-issue-online" width="500px"
+                height="500px"></iframe>
+    </div>
+    <form action="getEmail" method="get">
         <div class="form-group">
-            <input type="hidden" name = "blockidHidden" class="form-control" th:value ="${blockID}">
+            <input type="hidden" name="blockidHidden" class="form-control" th:value="${blockID}">
         </div>
         <div class="form-group">
-            <input type="text" name = "name" class="form-control" placeholder="Your Name">
+            <input type="text" name="name" class="form-control" placeholder="Your Name">
         </div>
         <div class="form-group">
-            <input type="text" name = "email"class="form-control" placeholder="Your Email">
+            <input type="text" name="email" class="form-control" placeholder="Your Email">
         </div>
         <div class="form-group">
-            <select type="text" name ="category" class="form-control">
+            <select type="text" name="category" class="form-control">
                 <option value="Abandoned Vehicle">Abandoned Vehicle</option>
                 <option value="Sidewalk">Uneven Sidewalk</option>
                 <option value="Litter">Litter</option>
@@ -239,7 +257,8 @@
             <div class="row d-flex justify-content-center">
                 <div class="col-md-7 text-center heading-section heading-section-white ftco-animate">
                     <h2>Subcribe to our Newsletter</h2>
-                    <p>Our weekly newsletter includes S.MILE client interviews, data statistics and other transportation-related news.</p>
+                    <p>Our weekly newsletter includes S.MILE client interviews, data statistics and other
+                        transportation-related news.</p>
                     <div class="row d-flex justify-content-center mt-4 mb-4">
                         <div class="col-md-8">
                             <form action="#" class="subscribe-form">
@@ -274,14 +293,22 @@
                 <div class="ftco-footer-widget mb-4 ml-md-5">
                     <h2 class="ftco-heading-2">Crime Data</h2>
                     <ul class="list-unstyled">
-                        <li><a href="#" class="py-1 d-block"><span class="ion-ios-arrow-forward mr-3"></span>Family Law</a></li>
-                        <li><a href="#" class="py-1 d-block"><span class="ion-ios-arrow-forward mr-3"></span>Business Law</a></li>
-                        <li><a href="#" class="py-1 d-block"><span class="ion-ios-arrow-forward mr-3"></span>Insurance Law</a></li>
-                        <li><a href="#" class="py-1 d-block"><span class="ion-ios-arrow-forward mr-3"></span>Criminal Law</a></li>
-                        <li><a href="#" class="py-1 d-block"><span class="ion-ios-arrow-forward mr-3"></span>Drug Offenses</a></li>
-                        <li><a href="#" class="py-1 d-block"><span class="ion-ios-arrow-forward mr-3"></span>Fire Accident</a></li>
-                        <li><a href="#" class="py-1 d-block"><span class="ion-ios-arrow-forward mr-3"></span>Employment Law</a></li>
-                        <li><a href="#" class="py-1 d-block"><span class="ion-ios-arrow-forward mr-3"></span>Property Law</a></li>
+                        <li><a href="#" class="py-1 d-block"><span class="ion-ios-arrow-forward mr-3"></span>Family Law</a>
+                        </li>
+                        <li><a href="#" class="py-1 d-block"><span class="ion-ios-arrow-forward mr-3"></span>Business
+                            Law</a></li>
+                        <li><a href="#" class="py-1 d-block"><span class="ion-ios-arrow-forward mr-3"></span>Insurance
+                            Law</a></li>
+                        <li><a href="#" class="py-1 d-block"><span class="ion-ios-arrow-forward mr-3"></span>Criminal
+                            Law</a></li>
+                        <li><a href="#" class="py-1 d-block"><span class="ion-ios-arrow-forward mr-3"></span>Drug
+                            Offenses</a></li>
+                        <li><a href="#" class="py-1 d-block"><span class="ion-ios-arrow-forward mr-3"></span>Fire
+                            Accident</a></li>
+                        <li><a href="#" class="py-1 d-block"><span class="ion-ios-arrow-forward mr-3"></span>Employment
+                            Law</a></li>
+                        <li><a href="#" class="py-1 d-block"><span class="ion-ios-arrow-forward mr-3"></span>Property
+                            Law</a></li>
 
                     </ul>
                 </div>
@@ -308,9 +335,12 @@
                     <h2 class="ftco-heading-2">Have a Questions?</h2>
                     <div class="block-23 mb-3">
                         <ul>
-                            <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
-                            <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
-                            <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+                            <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span>
+                            </li>
+                            <li><a href="#"><span class="icon icon-phone"></span><span
+                                    class="text">+2 392 3929 210</span></a></li>
+                            <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -320,7 +350,10 @@
             <div class="col-md-12 text-center">
 
                 <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                    Copyright &copy;<script>document.write(new Date().getFullYear());</script>
+                    All rights reserved | This template is made with <i class="icon-heart color-danger"
+                                                                        aria-hidden="true"></i> by <a
+                            href="https://colorlib.com" target="_blank">Colorlib</a>
                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
             </div>
         </div>
@@ -328,9 +361,14 @@
 </footer>
 
 
-
 <!-- loader -->
-<div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+<div id="ftco-loader" class="show fullscreen">
+    <svg class="circular" width="48px" height="48px">
+        <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>
+        <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
+                stroke="#F96D00"/>
+    </svg>
+</div>
 
 
 <script src="js/jquery.min.js"></script>

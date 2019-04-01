@@ -1,6 +1,7 @@
 package com.detroitlabs.smile.Services;
 
 import com.detroitlabs.smile.Model.SpinDataModel.AllSpinData;
+import com.detroitlabs.smile.Model.SpinDataModel.Vehicles;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,5 +42,19 @@ public class SpinServiceTest {
                 HttpMethod.GET, httpEntity, AllSpinData.class);
 
         Assert.assertEquals(200, response.getStatusCodeValue());
+    }
+
+    @Test
+    public void coordinateInfoForMapsShouldReturn() throws IOException {
+        Vehicles vehicles = testSpinService.fetchSpinData(42.32833583,-83.03767604).getVehicles();
+        Double[][] testArray =testSpinService.coordinateInfoForMaps(vehicles);
+        System.out.println(testArray[0][1].toString());
+
+        Assert.assertNotNull(testArray);
+
+
+
+
+
     }
 }
