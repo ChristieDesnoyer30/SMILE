@@ -194,8 +194,12 @@ public class LocationController {
     }
 
     @RequestMapping("/test")
-    public ModelAndView showMap(){
+    public ModelAndView showMap() throws IOException {
         ModelAndView modelAndView = new ModelAndView("testMap");
+        Vehicles vehicles = spinService.fetchSpinData(42.32833583, -83.03767604).getVehicles();
+
+        modelAndView.addObject("vehiclecoords", spinService.coordinateInfoForMaps(vehicles));
+
         return modelAndView;
     }
 

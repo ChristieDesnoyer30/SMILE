@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 @Component
@@ -55,17 +56,25 @@ public class SpinService {
     }
 
 
-    public String coordinateInfoForMaps(Vehicles vehicles){
+    public Double[][] coordinateInfoForMaps(Vehicles vehicles){
         String coordinates= " ";
 
-        for (SpinScooter spinScooter: vehicles) {
-            String stringLatitude = Double.toString(spinScooter.getLat());
-            String stringLng = Double.toString(spinScooter.getLng());
-            coordinates += stringLatitude.concat(", " + stringLng + "&q=");
-        }
+        Double[][] spinScooterLocations = new Double[vehicles.size()][];
 
-        System.out.println(coordinates);
-        return coordinates;
+        for (int i =0; i<vehicles.size(); i++) {
+            Double[] latAndLong = new Double[2];
+
+            latAndLong[0] = vehicles.get(i).getLat();
+            latAndLong[1] = vehicles.get(i).getLng();
+
+            spinScooterLocations[i] = latAndLong;
+        }
+//            String stringLatitude = Double.toString(spinScooter.getLat());
+//            String stringLng = Double.toString(spinScooter.getLng());
+//            coordinates += stringLatitude.concat(", " + stringLng + "&q=");
+
+//        System.out.println(coordinates);
+        return spinScooterLocations;
     }
 
 }
