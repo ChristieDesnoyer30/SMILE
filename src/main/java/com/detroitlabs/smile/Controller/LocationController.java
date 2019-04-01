@@ -64,26 +64,16 @@ public class LocationController {
 
 
     @RequestMapping("/")
-    public String showPage() {
-//        Do not uncomment out this method, was only needed once to populate our MogoBike database
-//         mogoBikeService.createMogoBikeDataBaseWithCityBlockIds();
-
-        return "index";
-    }
+    public String showPage() { return "index"; }
 
     @RequestMapping("index.html")
-    public String showResultsPage() {
-
-
-        return "index";
-    }
+    public String showResultsPage() { return "index"; }
 
     @RequestMapping("safety-tips.html")
-    public String showSafetyTips() {
+    public String showSafetyTips() { return "safety-tips"; }
 
-
-        return "safety-tips";
-    }
+    @RequestMapping("contact.html")
+    public String showContact() { return "contact"; }
 
     @RequestMapping("getAddress")
     public ModelAndView showResultsPage(LocationAndCrimeZone locationAndCrimeZone, @RequestParam("startAddress") String startAddress, @RequestParam("address") String endAddress, RedirectAttributes redirectAttrs) throws IOException {
