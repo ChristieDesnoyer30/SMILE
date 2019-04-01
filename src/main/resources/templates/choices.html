@@ -118,43 +118,94 @@
     <div class="column" onclick="openTab('b3');" style="background:#DBDBDB;">Better Mile:<br> See something? Say something</div>
 </div>
 
+
+
+
 <div id="b1" class="containerTab" style="display:none;background:#F8F9FA">
     <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
-    <h2>Your Nearby Drivers</h2>
-    <!--<img th:src="@{'https://maps.googleapis.com/maps/api/staticmap?center=Detroit,MI&zoom=13&size=600x300&maptype=roadmap-->
-<!--&markers=color:blue%7Clabel:' + ${coordinates} +'&key=AIzaSyCpxYFcbbTp2Pn4c8WENjANMpaon9ixDbo'}"/>-->
 
-    <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${coordinates} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}">
+    <div th:switch="${zoneRecs}">
+        <div th:case="'Non-Pedestrian Friendly'">
+            <h2>Your Nearby Drivers</h2>
+            <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${coordinates} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}">
+    </div>
 
-    <h2>Nearby MogoBike Docks</h2>
-    <p th:text="${bikelocation}"/>
-    <p th:text="${bikedock}"/>
+        <div th:case="'Semi-Pedestrian Friendly'">
+            <h2>Your Nearby Drivers</h2>
 
+            <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${coordinates} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}">
 
-    <h2>Nearby Spin Scooter</h2>
-
-
-       <table class="table">
-           <thead>
-           <tr>
-               <th>Latitude</th>
-               <th>Longitude</th>
-               <th>Battery Percent</th>
-
-           </tr>
-           </thead>
-           <tbody>
-
-           <tr th:each="spinscooter : ${vehicles}">
-                   <td th:text="${spinscooter.lat}"></td>
-                   <td th:text="${spinscooter.lng}"></td>
-                   <td th:text="${spinscooter.battPercentage}"></td>
+            <h2>Nearby MogoBike Docks</h2>
+            <div th:each="bike : ${bikes}">
+                <p th:text="${bike.name}"/>
+                <p th:text="${bike.docks}"/>
+            </div>
 
 
-               </tr>
+            <h2>Nearby Spin Scooter</h2>
 
-           </tbody>
-       </table>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Battery Percent</th>
+
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="spinscooter : ${vehicles}">
+                    <td th:text="${spinscooter.lat}"></td>
+                    <td th:text="${spinscooter.lng}"></td>
+                    <td th:text="${spinscooter.battPercentage}"></td>
+
+
+                </tr>
+
+                </tbody>
+            </table></div>
+        <div th:case="'Pedestrian Friendly'">
+
+            <h2>Your Nearby Drivers</h2>
+
+            <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${coordinates} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}">
+
+            <h2>Nearby MogoBike Docks</h2>
+            <div th:each="bike : ${bikes}">
+                <p th:text="${bike.name}"/>
+                <p th:text="${bike.docks}"/>
+            </div>
+
+
+            <h2>Nearby Spin Scooter</h2>
+
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Battery Percent</th>
+
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="spinscooter : ${vehicles}">
+                    <td th:text="${spinscooter.lat}"></td>
+                    <td th:text="${spinscooter.lng}"></td>
+                    <td th:text="${spinscooter.battPercentage}"></td>
+
+
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
    </div>
     <!--<img th:src="@{'https://image.maps.api.here.com/mia/1.6/mapview?app_id='+${hereappid}+'&app_code='+${hereappcode}+'&poi=' + ${coordinates} + '&w=400&h=300&z=20'}">-->
 </div>

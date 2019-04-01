@@ -17,6 +17,9 @@ public class MogoBikesAndBlockId {
     private Double latitude;
     private Double longitude;
 
+    public MogoBikesAndBlockId() {
+    }
+
     public MogoBikesAndBlockId(String cityBlockId, String name, String docks, Double latitude, Double longitude) {
         this.cityBlockId = cityBlockId;
         this.name = name;

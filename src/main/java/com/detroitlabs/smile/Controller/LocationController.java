@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 
@@ -95,7 +96,6 @@ public class LocationController {
             locationAndCrimeZone.setLat(endLat);
             locationAndCrimeZone.setLng(endLng);
 
-
             String blockId = locationServices.getBlockID(endLocationInfo);
             locationAndCrimeZone.setBlockid(blockId);
             locationAndCrimeZone.setAddress(endAddress);
@@ -103,18 +103,22 @@ public class LocationController {
             TopCrimeData lowCrimeData = crimeServices.getLowCrimedata(blockId);
             modelAndView.addObject("blockID", blockId);
 
-
+            String zoneInfo;
             if (highCrimeData.size() >= 2 || lowCrimeData.size() > 6) {
                 locationAndCrimeZone.setCrimeZone(NPF);
-                modelAndView.addObject("Zone",NPF);
+                zoneInfo = NPF;
+                modelAndView.addObject("Zone", NPF);
             } else if ((highCrimeData.size() < 2 && highCrimeData.size() >= 1) || (lowCrimeData.size() >= 3 && lowCrimeData.size() <= 5)) {
                 locationAndCrimeZone.setCrimeZone(SPF);
-                modelAndView.addObject("Zone",SPF);
-
+                modelAndView.addObject("Zone", SPF);
+                zoneInfo = SPF;
             } else {
                 locationAndCrimeZone.setCrimeZone(PF);
-                modelAndView.addObject("Zone",PF);
+                modelAndView.addObject("Zone", PF);
+                zoneInfo = PF;
             }
+
+            modelAndView.addObject("zoneRecs", zoneInfo);
 
 
             TopLocationInfo startLocationInfo = locationServices.getLocationInfo(startAddress);
@@ -123,7 +127,6 @@ public class LocationController {
 
 
             ArrayList<LocationInfo> allLyftCoordinates = lyftServices.fetchLyftData(startLat, startLng).getNearbyDriversPickUpEtas().get(1).getNearby_drivers();
-
 
             String coordinates = " ";
             for (LocationInfo locationInfo : allLyftCoordinates) {
@@ -135,17 +138,25 @@ public class LocationController {
             modelAndView.addObject("coordinates", coordinates);
             modelAndView.setViewName("choices");
 
-            modelAndView.addObject("highCrime",highCrimeData);
-            modelAndView.addObject("lowCrime",lowCrimeData);
+            modelAndView.addObject("highCrime", highCrimeData);
+            modelAndView.addObject("lowCrime", lowCrimeData);
 
-            MogoBikesAndBlockId mogoBikesAndBlockId = mogoBikesRepository.findByCityBlockId(blockId);
+            ArrayList<MogoBikesAndBlockId> mogoBikesAndBlockIds = new ArrayList<>();
 
-            if (mogoBikesAndBlockId != null) {
-                modelAndView.addObject("bikelocation", "Bike Location: " + mogoBikesAndBlockId.getName());
-                modelAndView.addObject("bikedock", "Number of docks in location: " + mogoBikesAndBlockId.getDocks());
+           long blockIdNumber = Long.parseLong(blockId);
+
+            for (int i = 0; i <= 10; i++) {
+                String newBlockId = String.valueOf(blockIdNumber + i);
+                if(mogoBikesRepository.findByCityBlockId(newBlockId) != null){
+                mogoBikesAndBlockIds.add(mogoBikesRepository.findByCityBlockId(newBlockId));
+                }
+            }
+
+
+            if (mogoBikesAndBlockIds.size() > 0) {
+                modelAndView.addObject("bikes", mogoBikesAndBlockIds);
             } else {
-                modelAndView.addObject("bikelocation", "NO BIKES");
-                modelAndView.addObject("bikedock", "AVAILABLE");
+                modelAndView.addObject("bikes", "NO BIKES AVAILABLE");
             }
 
             locationAndCrimeZoneRepository.save(locationAndCrimeZone);
@@ -166,7 +177,7 @@ public class LocationController {
     }
 
     @RequestMapping("getEmail")
-    public ModelAndView showEmailResult(@RequestParam("blockidHidden") String blockID,@RequestParam("name") String name,@RequestParam("email") String email,@RequestParam("category") String category,@RequestParam("message") String message) {
+    public ModelAndView showEmailResult(@RequestParam("blockidHidden") String blockID, @RequestParam("name") String name, @RequestParam("email") String email, @RequestParam("category") String category, @RequestParam("message") String message) {
 
         ModelAndView modelAndView = new ModelAndView();
 
