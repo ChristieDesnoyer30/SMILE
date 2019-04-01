@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -83,45 +84,26 @@ public class LocationController {
     }
 
     @RequestMapping("getAddress")
-    public ModelAndView showResultsPage(LocationAndCrimeZone locationAndCrimeZone, @RequestParam("startAddress") String startAddress, @RequestParam("address") String endAddress) throws IOException {
-
-
+    public ModelAndView showResultsPage(LocationAndCrimeZone locationAndCrimeZone, @RequestParam("startAddress") String startAddress, @RequestParam("address") String endAddress, RedirectAttributes redirectAttrs) throws IOException {
         ModelAndView modelAndView = new ModelAndView();
 
-        TopLocationInfo startLocationInfo = locationServices.getLocationInfo(startAddress);
-        double startLat = locationServices.getLatitude(startLocationInfo);
-        double startLng = locationServices.getLongtitude(startLocationInfo);
+        if (endAddress.contains("DETROIT") || endAddress.contains("482") && startAddress.contains("DETROIT") || startAddress.contains("482")) {
+            TopLocationInfo endLocationInfo = locationServices.getLocationInfo(endAddress);
+            double endLat = locationServices.getLatitude(endLocationInfo);
+            double endLng = locationServices.getLongtitude(endLocationInfo);
+
+            locationAndCrimeZone.setLat(endLat);
+            locationAndCrimeZone.setLng(endLng);
 
 
-        ArrayList<LocationInfo> allLyftCoordinates = lyftServices.fetchLyftData(startLat,startLng).getNearbyDriversPickUpEtas().get(1).getNearby_drivers();
+            String blockId = locationServices.getBlockID(endLocationInfo);
+            locationAndCrimeZone.setBlockid(blockId);
+            locationAndCrimeZone.setAddress(endAddress);
+            TopCrimeData highCrimeData = crimeServices.getHighCrimedata(blockId);
+            TopCrimeData lowCrimeData = crimeServices.getLowCrimedata(blockId);
+            modelAndView.addObject("blockID", blockId);
 
 
-        String coordinates = " ";
-        for (LocationInfo locationInfo : allLyftCoordinates) {
-            String stringLatitude = Double.toString(locationInfo.getLocations().get(0).getLat());
-            String stringLng = Double.toString(locationInfo.getLocations().get(0).getLng());
-            coordinates += stringLatitude.concat(", " + stringLng + "||");
-        }
-
-        modelAndView.addObject("coordinates",coordinates);
-
-
-        TopLocationInfo endLocationInfo = locationServices.getLocationInfo(endAddress);
-        double endLat = locationServices.getLatitude(endLocationInfo);
-        double endLng = locationServices.getLongtitude(endLocationInfo);
-
-        locationAndCrimeZone.setLat(endLat);
-        locationAndCrimeZone.setLng(endLng);
-
-        String blockID = locationServices.getBlockID(endLocationInfo);
-
-        locationAndCrimeZone.setBlockid(blockID);
-        modelAndView.addObject("blockID", blockID);
-        locationAndCrimeZone.setAddress(endAddress);
-
-        if (endAddress.contains("DETROIT") || endAddress.contains("482")) {
-            TopCrimeData highCrimeData = crimeServices.getHighCrimedata(blockID);
-            TopCrimeData lowCrimeData = crimeServices.getLowCrimedata(blockID);
             if (highCrimeData.size() >= 2 || lowCrimeData.size() > 6) {
                 locationAndCrimeZone.setCrimeZone(NPF);
                 modelAndView.addObject("Zone",NPF);
@@ -133,31 +115,52 @@ public class LocationController {
                 locationAndCrimeZone.setCrimeZone(PF);
                 modelAndView.addObject("Zone",PF);
             }
+
+
+            TopLocationInfo startLocationInfo = locationServices.getLocationInfo(startAddress);
+            double startLat = locationServices.getLatitude(startLocationInfo);
+            double startLng = locationServices.getLongtitude(startLocationInfo);
+
+
+            ArrayList<LocationInfo> allLyftCoordinates = lyftServices.fetchLyftData(startLat, startLng).getNearbyDriversPickUpEtas().get(1).getNearby_drivers();
+
+
+            String coordinates = " ";
+            for (LocationInfo locationInfo : allLyftCoordinates) {
+                String stringLatitude = Double.toString(locationInfo.getLocations().get(0).getLat());
+                String stringLng = Double.toString(locationInfo.getLocations().get(0).getLng());
+                coordinates += stringLatitude.concat(", " + stringLng + "||");
+            }
+
+            modelAndView.addObject("coordinates", coordinates);
             modelAndView.setViewName("choices");
 
             modelAndView.addObject("highCrime",highCrimeData);
             modelAndView.addObject("lowCrime",lowCrimeData);
 
+            MogoBikesAndBlockId mogoBikesAndBlockId = mogoBikesRepository.findByCityBlockId(blockId);
+
+            if (mogoBikesAndBlockId != null) {
+                modelAndView.addObject("bikelocation", "Bike Location: " + mogoBikesAndBlockId.getName());
+                modelAndView.addObject("bikedock", "Number of docks in location: " + mogoBikesAndBlockId.getDocks());
+            } else {
+                modelAndView.addObject("bikelocation", "NO BIKES");
+                modelAndView.addObject("bikedock", "AVAILABLE");
+            }
+
+            locationAndCrimeZoneRepository.save(locationAndCrimeZone);
+
+            AllSpinData allSpinData = spinService.fetchSpinData(startLat, startLng);
+
+            modelAndView.addObject("vehicles", allSpinData.getVehicles());
+
+
         } else {
-            modelAndView.setViewName("index");
+
+            modelAndView = new ModelAndView("redirect:/");
+            redirectAttrs.addFlashAttribute("message", "Must enter an address with DETROIT or a 482.. zip code");
         }
 
-
-        MogoBikesAndBlockId mogoBikesAndBlockId = mogoBikesRepository.findByCityBlockId(blockID);
-
-        if (mogoBikesAndBlockId != null) {
-            modelAndView.addObject("bikelocation","Bike Location: " + mogoBikesAndBlockId.getName());
-            modelAndView.addObject("bikedock","Number of docks in location: " + mogoBikesAndBlockId.getDocks());
-        } else {
-            modelAndView.addObject("bikelocation","NO BIKES");
-            modelAndView.addObject("bikedock","AVAILABLE");
-        }
-
-        locationAndCrimeZoneRepository.save(locationAndCrimeZone);
-
-       AllSpinData allSpinData= spinService.fetchSpinData(startLat,startLng);
-
-       modelAndView.addObject("vehicles", allSpinData.getVehicles());
 
         return modelAndView;
     }
@@ -167,15 +170,13 @@ public class LocationController {
 
         ModelAndView modelAndView = new ModelAndView();
 
-        EmailForm emailForm = new EmailForm(blockID,name,email,category,message);
+        EmailForm emailForm = new EmailForm(blockID, name, email, category, message);
 
-        modelAndView.addObject("sentEmail",emailForm);
+        modelAndView.addObject("sentEmail", emailForm);
         modelAndView.setViewName("choices");
 
         emailFormRepository.save(emailForm);
         return modelAndView;
 
-
     }
-
 }
