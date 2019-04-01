@@ -12,6 +12,7 @@ import com.detroitlabs.smile.Model.SpinDataModel.AllSpinData;
 import com.detroitlabs.smile.Repository.LocationAndCrimeZoneRepository;
 import com.detroitlabs.smile.Repository.MogoBikesRepository;
 import com.detroitlabs.smile.Services.*;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -190,6 +191,12 @@ public class LocationController {
         emailFormRepository.save(emailForm);
         return modelAndView;
 
+    }
+
+    @RequestMapping("/test")
+    public ModelAndView showMap(){
+        ModelAndView modelAndView = new ModelAndView("testMap");
+        return modelAndView;
     }
 
 }
