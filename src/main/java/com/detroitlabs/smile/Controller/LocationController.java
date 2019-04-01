@@ -164,7 +164,7 @@ public class LocationController {
 
             Vehicles vehicles = spinService.fetchSpinData(startLat, startLng).getVehicles();
 
-            modelAndView.addObject("vehicles", spinService.coordinateInfoForMaps(vehicles));
+            modelAndView.addObject("vehiclecoords", spinService.coordinateInfoForMaps(vehicles));
 
 
         } else {

@@ -61,9 +61,10 @@ public class SpinService {
         for (SpinScooter spinScooter: vehicles) {
             String stringLatitude = Double.toString(spinScooter.getLat());
             String stringLng = Double.toString(spinScooter.getLng());
-            coordinates += stringLatitude.concat(", " + stringLng + "||");
+            coordinates += stringLatitude.concat(", " + stringLng + "&q=");
         }
 
+        System.out.println(coordinates);
         return coordinates;
     }
 
