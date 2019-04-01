@@ -1,13 +1,13 @@
 package com.detroitlabs.smile.Controller;
 
 import com.detroitlabs.smile.Model.CrimeDataModel.TopCrimeData;
+import com.detroitlabs.smile.Model.EmailForm;
 import com.detroitlabs.smile.Model.GeoDataModel.TopLocationInfo;
 import com.detroitlabs.smile.Model.LocationAndCrimeZone;
 import com.detroitlabs.smile.Model.LyftData.LocationInfo;
 import com.detroitlabs.smile.Model.MogoBikesAndBlockId;
+import com.detroitlabs.smile.Repository.EmailFormRepository;
 import com.detroitlabs.smile.Model.SpinDataModel.AllSpinData;
-import com.detroitlabs.smile.Model.SpinDataModel.SpinScooter;
-import com.detroitlabs.smile.Model.SpinDataModel.Vehicles;
 import com.detroitlabs.smile.Repository.LocationAndCrimeZoneRepository;
 import com.detroitlabs.smile.Repository.MogoBikesRepository;
 import com.detroitlabs.smile.Services.*;
@@ -49,10 +49,13 @@ public class LocationController {
     private LocationAndCrimeZoneRepository locationAndCrimeZoneRepository;
 
     @Autowired
-    MogoBikeService mogoBikeService;
+    private MogoBikeService mogoBikeService;
 
     @Autowired
-    MogoBikesRepository mogoBikesRepository;
+    private MogoBikesRepository mogoBikesRepository;
+
+    @Autowired
+    private EmailFormRepository emailFormRepository;
 
     @Autowired
     SpinService spinService;
@@ -84,7 +87,6 @@ public class LocationController {
     public ModelAndView showResultsPage(LocationAndCrimeZone locationAndCrimeZone, @RequestParam("startAddress") String startAddress, @RequestParam("address") String endAddress, RedirectAttributes redirectAttrs) throws IOException {
         ModelAndView modelAndView = new ModelAndView();
 
-
         if (endAddress.contains("DETROIT") || endAddress.contains("482") && startAddress.contains("DETROIT") || startAddress.contains("482")) {
             TopLocationInfo endLocationInfo = locationServices.getLocationInfo(endAddress);
             double endLat = locationServices.getLatitude(endLocationInfo);
@@ -93,23 +95,25 @@ public class LocationController {
             locationAndCrimeZone.setLat(endLat);
             locationAndCrimeZone.setLng(endLng);
 
+
             String blockId = locationServices.getBlockID(endLocationInfo);
             locationAndCrimeZone.setBlockid(blockId);
             locationAndCrimeZone.setAddress(endAddress);
             TopCrimeData highCrimeData = crimeServices.getHighCrimedata(blockId);
             TopCrimeData lowCrimeData = crimeServices.getLowCrimedata(blockId);
+            modelAndView.addObject("blockID", blockId);
 
 
             if (highCrimeData.size() >= 2 || lowCrimeData.size() > 6) {
                 locationAndCrimeZone.setCrimeZone(NPF);
-                modelAndView.addObject("Zone", NPF);
+                modelAndView.addObject("Zone",NPF);
             } else if ((highCrimeData.size() < 2 && highCrimeData.size() >= 1) || (lowCrimeData.size() >= 3 && lowCrimeData.size() <= 5)) {
                 locationAndCrimeZone.setCrimeZone(SPF);
-                modelAndView.addObject("Zone", SPF);
+                modelAndView.addObject("Zone",SPF);
 
             } else {
                 locationAndCrimeZone.setCrimeZone(PF);
-                modelAndView.addObject("Zone", PF);
+                modelAndView.addObject("Zone",PF);
             }
 
 
@@ -131,8 +135,8 @@ public class LocationController {
             modelAndView.addObject("coordinates", coordinates);
             modelAndView.setViewName("choices");
 
-            modelAndView.addObject("highCrime", highCrimeData);
-            modelAndView.addObject("lowCrime", lowCrimeData);
+            modelAndView.addObject("highCrime",highCrimeData);
+            modelAndView.addObject("lowCrime",lowCrimeData);
 
             MogoBikesAndBlockId mogoBikesAndBlockId = mogoBikesRepository.findByCityBlockId(blockId);
 
@@ -161,5 +165,18 @@ public class LocationController {
         return modelAndView;
     }
 
+    @RequestMapping("getEmail")
+    public ModelAndView showEmailResult(@RequestParam("blockidHidden") String blockID,@RequestParam("name") String name,@RequestParam("email") String email,@RequestParam("category") String category,@RequestParam("message") String message) {
 
+        ModelAndView modelAndView = new ModelAndView();
+
+        EmailForm emailForm = new EmailForm(blockID, name, email, category, message);
+
+        modelAndView.addObject("sentEmail", emailForm);
+        modelAndView.setViewName("choices");
+
+        emailFormRepository.save(emailForm);
+        return modelAndView;
+
+    }
 }
