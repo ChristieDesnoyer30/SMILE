@@ -6,6 +6,7 @@ import com.detroitlabs.smile.Model.GeoDataModel.TopLocationInfo;
 import com.detroitlabs.smile.Model.LocationAndCrimeZone;
 import com.detroitlabs.smile.Model.LyftData.LocationInfo;
 import com.detroitlabs.smile.Model.MogoBikesAndBlockId;
+import com.detroitlabs.smile.Model.SpinDataModel.Vehicles;
 import com.detroitlabs.smile.Repository.EmailFormRepository;
 import com.detroitlabs.smile.Model.SpinDataModel.AllSpinData;
 import com.detroitlabs.smile.Repository.LocationAndCrimeZoneRepository;
@@ -161,9 +162,9 @@ public class LocationController {
 
             locationAndCrimeZoneRepository.save(locationAndCrimeZone);
 
-            AllSpinData allSpinData = spinService.fetchSpinData(startLat, startLng);
+            Vehicles vehicles = spinService.fetchSpinData(startLat, startLng).getVehicles();
 
-            modelAndView.addObject("vehicles", allSpinData.getVehicles());
+            modelAndView.addObject("vehicles", spinService.coordinateInfoForMaps(vehicles));
 
 
         } else {
@@ -190,4 +191,5 @@ public class LocationController {
         return modelAndView;
 
     }
+
 }
