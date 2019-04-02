@@ -76,6 +76,15 @@ public class LocationController {
     @RequestMapping("contact.html")
     public String showContact() { return "contact"; }
 
+    @RequestMapping("about.html")
+    public String showAbout() { return "about"; }
+
+    @RequestMapping("howToUse.html")
+    public String showHowTo() { return "blog"; }
+
+
+
+
     @RequestMapping("getAddress")
     public ModelAndView showResultsPage(LocationAndCrimeZone locationAndCrimeZone, @RequestParam("startAddress") String startAddress, @RequestParam("address") String endAddress, RedirectAttributes redirectAttrs) throws IOException {
         ModelAndView modelAndView = new ModelAndView();
