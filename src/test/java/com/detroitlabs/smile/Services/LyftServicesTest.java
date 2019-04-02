@@ -26,5 +26,18 @@ public class LyftServicesTest {
         Assert.assertNotNull(lyftTestArray);
     }
 
+    @Test
+    public void fetchCoordsForGoogleMaps(){
+        LyftServices lyftServices = new LyftServices();
+        lyftServices.setLyftKey(key);
+        ArrayList<LocationInfo> lyftTestArray = lyftServices.fetchLyftData(42.402580,-82.937760).getNearbyDriversPickUpEtas().get(1).getNearby_drivers();
+        Double[][] array = lyftServices.lyftCoordinateInfoForMaps(lyftTestArray);
+        System.out.println(array[0][1].toString());
+        Assert.assertNotNull(array);
+
+
+
+    }
+
 
 }

@@ -121,16 +121,9 @@ public class LocationController {
             double startLng = locationServices.getLongtitude(startLocationInfo);
 
 
-            ArrayList<LocationInfo> allLyftCoordinates = lyftServices.fetchLyftData(startLat, startLng).getNearbyDriversPickUpEtas().get(1).getNearby_drivers();
-
-            String coordinates = " ";
-            for (LocationInfo locationInfo : allLyftCoordinates) {
-                String stringLatitude = Double.toString(locationInfo.getLocations().get(0).getLat());
-                String stringLng = Double.toString(locationInfo.getLocations().get(0).getLng());
-                coordinates += stringLatitude.concat(", " + stringLng + "||");
-            }
-
-            modelAndView.addObject("coordinates", coordinates);
+            ArrayList<LocationInfo> allLyftCoordinates = lyftServices.fetchLyftData(startLat, startLng)
+                    .getNearbyDriversPickUpEtas().get(1).getNearby_drivers();
+            modelAndView.addObject("lyftcoords", lyftServices.lyftCoordinateInfoForMaps(allLyftCoordinates));
             modelAndView.setViewName("choices");
 
             modelAndView.addObject("highCrime", highCrimeData);

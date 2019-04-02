@@ -136,20 +136,16 @@
     <div th:switch="${zoneRecs}">
         <div th:case="'Non-Pedestrian Friendly'">
             <h2>Your Nearby Drivers</h2>
-            <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${coordinates} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}"
-                 width="60%" height="60%">
+            <div id="lyftmap" style="width: 500px; height: 400px;"></div>
+
         </div>
 
         <div th:case="'Semi-Pedestrian Friendly'">
             <h2>Your Nearby Drivers</h2>
-
-            <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${coordinates} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}" width="60%" height="60%">
+            <div id="lyftmap" style="width: 500px; height: 400px;"></div>
 
             <h2>Nearby Spin Scooter</h2>
             <div id="map" style="width: 500px; height: 400px;"></div>
-
-            <!--<img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${vehiclecoords} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}"-->
-                 <!--width="60%" height="60%">-->
 
             <div th:if="bikesAvailable">
             <h2>Nearby MogoBike Docks</h2>
@@ -163,12 +159,10 @@
         <div th:case="'Pedestrian Friendly'">
 
             <h2>Your Nearby Drivers</h2>
-            <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${coordinates} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}"
-                 width="60%" height="60%">
+            <div id="lyftmap" style="width: 500px; height: 400px;"></div>
 
             <h2>Nearby Spin Scooter</h2>
-            <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${vehiclecoords} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}"
-                 width="60%" height="60%">
+            <div id="map" style="width: 500px; height: 400px;"></div>
 
             <h2>Nearby MogoBike Docks</h2>
 
@@ -386,6 +380,33 @@
     var locations = /*[[${vehiclecoords}]]*/'default';
 
     var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 10,
+        center: new google.maps.LatLng(42.32833583, -83.03767604),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][0], locations[i][1]),
+            map: map
+        });
+
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+                // infowindow.setContent(locations[i][0]);
+                infowindow.open(map, marker);
+            }
+        })(marker, i));
+    }
+</script>
+<script th:inline="javascript">
+    var locations = /*[[${lyftcoords}]]*/'default';
+
+    var map = new google.maps.Map(document.getElementById('lyftmap'), {
         zoom: 10,
         center: new google.maps.LatLng(42.32833583, -83.03767604),
         mapTypeId: google.maps.MapTypeId.ROADMAP
