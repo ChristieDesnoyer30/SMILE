@@ -33,12 +33,6 @@ public class LocationController {
     private final String PF = "Pedestrian Friendly";
     private final String SPF = "Semi-Pedestrian Friendly";
 
-    @Value("${HERE_APP_ID}")
-    String hereApiID;
-
-    @Value("${HERE_APP_CODE}")
-    String hereApiCode;
-
     @Autowired
     private LocationServices locationServices;
 
