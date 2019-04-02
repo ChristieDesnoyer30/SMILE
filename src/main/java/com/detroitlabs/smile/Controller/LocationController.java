@@ -148,10 +148,11 @@ public class LocationController {
             }
 
 
-            if (mogoBikesAndBlockIds.size() > 0) {
+            if (mogoBikesAndBlockIds != null) {
+                modelAndView.addObject("bikesAvailable", true);
                 modelAndView.addObject("bikes", mogoBikesAndBlockIds);
             } else {
-                modelAndView.addObject("bikes", "NO BIKES AVAILABLE");
+                modelAndView.addObject("bikesAvailable", false);
             }
 
             locationAndCrimeZoneRepository.save(locationAndCrimeZone);
