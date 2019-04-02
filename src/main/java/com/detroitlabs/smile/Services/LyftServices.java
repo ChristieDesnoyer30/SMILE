@@ -42,8 +42,8 @@ public class LyftServices {
         for (int i =0; i< allLocationInfo.size(); i++) {
             Double[] latAndLong = new Double[2];
 
-            latAndLong[0] = allLocationInfo.get(0).getLocations().get(0).getLat();
-            latAndLong[1] = allLocationInfo.get(0).getLocations().get(0).getLat();
+            latAndLong[0] = allLocationInfo.get(i).getLocations().get(0).getLat();
+            latAndLong[1] = allLocationInfo.get(i).getLocations().get(0).getLng();
 
             lyftCoordsForMap[i] = latAndLong;
         }
