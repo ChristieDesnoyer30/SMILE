@@ -147,10 +147,13 @@
             <h2>Nearby Spin Scooter</h2>
             <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${vehiclecoords} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}"
                  width="60%" height="60%">
+
+            <div th:if="bikesAvailable">
             <h2>Nearby MogoBike Docks</h2>
             <div th:each="bike : ${bikes}">
                 <p th:text="${bike.name}"/>
                 <p th:text="${bike.docks}"/>
+            </div>
             </div>
 
         </div>
@@ -165,9 +168,16 @@
                  width="60%" height="60%">
 
             <h2>Nearby MogoBike Docks</h2>
+
+            <div th:if="${bikesAvailable}">
             <div th:each="bike : ${bikes}">
                 <p th:text="${bike.name}"/>
                 <p th:text="${bike.docks}"/>
+            </div>
+        </div>
+
+            <div th:if="${bikesAvailable}">
+                <h2>No Bikes available.</h2>
             </div>
 
         </div>
