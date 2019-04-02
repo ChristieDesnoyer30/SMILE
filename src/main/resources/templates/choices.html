@@ -79,8 +79,9 @@
             }
             document.getElementById(tabName).style.display = "block";
         }
-
     </script>
+    <script src="https://maps.google.com/maps/api/js?key=AIzaSyDR8p_vpFZ3MSRin8HIBlx1Lso_1vcEBZQ&sensor=false"
+            type="text/javascript"></script>
 </head>
 <body>
 
@@ -145,8 +146,10 @@
             <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${coordinates} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}" width="60%" height="60%">
 
             <h2>Nearby Spin Scooter</h2>
-            <img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${vehiclecoords} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}"
-                 width="60%" height="60%">
+            <div id="map" style="width: 500px; height: 400px;"></div>
+
+            <!--<img th:src="@{' https://www.mapquestapi.com/staticmap/v5/map?key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF&locations=' + ${vehiclecoords} + '&size=@2x&key=E8A5tT9OsPDSTQcW5hL4BPvzUQTke3AF'}"-->
+                 <!--width="60%" height="60%">-->
 
             <div th:if="bikesAvailable">
             <h2>Nearby MogoBike Docks</h2>
@@ -379,7 +382,33 @@
     </svg>
 </div>
 
+<script th:inline="javascript">
+    var locations = /*[[${vehiclecoords}]]*/'default';
 
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 10,
+        center: new google.maps.LatLng(42.32833583, -83.03767604),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][0], locations[i][1]),
+            map: map
+        });
+
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+                // infowindow.setContent(locations[i][0]);
+                infowindow.open(map, marker);
+            }
+        })(marker, i));
+    }
+</script>
 <script src="js/jquery.min.js"></script>
 <script src="js/jquery-migrate-3.0.1.min.js"></script>
 <script src="js/popper.min.js"></script>
@@ -394,8 +423,6 @@
 <script src="js/bootstrap-datepicker.js"></script>
 <script src="js/jquery.timepicker.min.js"></script>
 <script src="js/scrollax.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-<script src="js/google-map.js"></script>
 <script src="js/main.js"></script>
 
 </body>
