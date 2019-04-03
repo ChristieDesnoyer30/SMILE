@@ -129,15 +129,18 @@
 
 <div id="b1" class="containerTab" style="display:none;background:#F8F9FA">
     <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+    <h3>We always suggest following our safety tips no matter what zone you are in (High/Moderate/Low Pedestrian Risk). <br>
+    <a href="/safety-tips.html">Safety Tips</a>
+    </h3>
 
     <div th:switch="${zoneRecs}">
-        <div th:case="'Non-Pedestrian Friendly'">
+        <div th:case="'High Pedestrian Risk'">
             <h2>Your Nearby Drivers</h2>
             <div id="lyftmap" style="width: 500px; height: 400px;"></div>
 
         </div>
 
-        <div th:case="'Semi-Pedestrian Friendly'">
+        <div th:case="'Moderate Pedestrian Risk'">
             <h2>Your Nearby Drivers</h2>
             <div id="lyftmap" style="width: 500px; height: 400px;"></div>
 
@@ -153,7 +156,7 @@
             </div>
 
         </div>
-        <div th:case="'Pedestrian Friendly'">
+        <div th:case="'Low Pedestrian Risk'">
 
             <h2>Your Nearby Drivers</h2>
             <div id="lyftmap" style="width: 500px; height: 400px;"></div>
