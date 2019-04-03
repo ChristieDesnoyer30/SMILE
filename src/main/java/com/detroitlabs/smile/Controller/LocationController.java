@@ -29,9 +29,9 @@ import java.util.ArrayList;
 @Controller
 public class LocationController {
 
-    private final String NPF = "Non-Pedestrian Friendly";
-    private final String PF = "Pedestrian Friendly";
-    private final String SPF = "Semi-Pedestrian Friendly";
+    private final String NPF = "High Pedestrian Risk";
+    private final String PF = "Low Pedestrian Risk";
+    private final String SPF = "Moderate Pedestrian Risk";
 
     @Autowired
     private LocationServices locationServices;
